@@ -101,7 +101,7 @@ void pinMode(unsigned char pin, unsigned char mode) {
 		ROM_GPIOPinTypeTimer(GPIO[pin/8], bit8[pin%8]);
 		ROM_GPIOPinConfigure(pinMux[pin][2]);
 		ROM_TimerConfigure(TIMER[pinMux[pin][0]], (TIMER_CFG_SPLIT_PAIR | TIMER_CFG_A_PWM | TIMER_CFG_B_PWM));
-		ROM_TimerPrescaleSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 0);		// ~769 Hz PWM
+		ROM_TimerPrescaleSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 0);		// ~1230 Hz PWM
 		ROM_TimerLoadSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 65279);		// Timer will load this value on timeout
 		ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 65280);	// Initial duty cycle of 0
 		ROM_TimerControlLevel(TIMER[pinMux[pin][0]], pinMux[pin][1], 0);
@@ -116,8 +116,8 @@ void pinMode(unsigned char pin, unsigned char mode) {
 		ROM_GPIOPinConfigure(pinMux[pin][2]);
 		ROM_TimerConfigure(TIMER[pinMux[pin][0]], (TIMER_CFG_SPLIT_PAIR | TIMER_CFG_A_PWM | TIMER_CFG_B_PWM));
 		ROM_TimerPrescaleSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 0);
-		ROM_TimerLoadSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 1000000);	// Timer will load this value on timeout
-		ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 925000);	// Sets 1500 us initial pulse length
+		ROM_TimerLoadSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 1600000);	// Timer will load this value on timeout
+		ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 1480000);	// Sets 1500 us initial pulse length
 		ROM_TimerControlLevel(TIMER[pinMux[pin][0]], pinMux[pin][1], 0);
 		ROM_TimerEnable(TIMER[pinMux[pin][0]], pinMux[pin][1]);
 		break;
@@ -157,7 +157,7 @@ void analogWrite(unsigned char pin, short val) {
 void servoWrite(unsigned char pin, short val) {
 	if (val < 600) val = 600;
 	else if (val > 2400) val = 2400;
-	ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 1000000 - (50 * val));
+	ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 1600000 - (80 * val));
 }
 
 unsigned long pulseIn(unsigned char pin, short val, unsigned long timeout) {
