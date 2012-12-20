@@ -1,0 +1,203 @@
+/**********************STELLARINO USER GUIDE**********************/
+              Copyright (C) 2012 Sultan Qasim Khan
+
+Stellarino is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Stellarino is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Stellarino.  If not, see <http://www.gnu.org/licenses/>.
+
+/*************************ABOUT STELLARINO*************************/
+Stellarino is a simple Wiring-like but incompatible interface library
+implemented in C for the TI Stellaris LM4F120H5QR used in the
+Stellaris Launchpad, and similar MCUs. It is meant to facilitate the
+rapid creation of basic microcontroller firmware without the need to
+parse through thousands of pages in datasheets and other documentation.
+It uses syntax similar to Wiring to ease the introduction of newcomers
+familiar with the Arduino and similar boards to the Stellaris platform.
+
+Stellarino implements functions for configuration, delays, using timers,
+GPIO, analog input, PWM, controlling hobby-style servomotors, and possibly
+more. It was created using the TI StellarisWare Peripheral Driver Library.
+It thus requires StellarisWare and a suitable IDE, such as TI Code Composer
+Studio in order to function. Since Stellarino implements all basic
+functionality using the StellarisWare PDL with simple, easy to understand
+code, it also makes a good introductory example for the use of the PDL.
+
+/*************************PIN MULTIPLEXING*************************/
+Pin		Possible Use(s) in Stellarino
+PA0		GPIO
+PA1		GPIO
+PA2		GPIO
+PA3		GPIO
+PA4		GPIO
+PA5		GPIO
+PA6		GPIO
+PA7		GPIO
+PB0		GPIO, PWM
+PB1		GPIO, PWM
+PB2		GPIO, PWM
+PB3		GPIO, PWM
+PB4		GPIO, PWM, ADC
+PB5		GPIO, PWM, ADC
+PB6		GPIO, PWM
+PB7		GPIO, PWM
+PC0		GPIO, PWM
+PC1		GPIO, PWM
+PC2		GPIO, PWM
+PC3		GPIO, PWM
+PC4		GPIO, PWM, Servo
+PC5		GPIO, PWM, Servo
+PC6		GPIO, PWM, Servo
+PC7		GPIO, PWM, Servo
+PD0		GPIO, PWM, Servo, ADC
+PD1		GPIO, PWM, Servo, ADC
+PD2		GPIO, PWM, Servo, ADC
+PD3		GPIO, PWM, Servo, ADC
+PD4		GPIO
+PD5		GPIO
+PD6		GPIO
+PD7		GPIO
+PE0		GPIO, ADC
+PE1		GPIO, ADC
+PE2		GPIO, ADC
+PE3		GPIO, ADC
+PE4		GPIO, ADC
+PE5		GPIO, ADC
+PE6		GPIO
+PE7		GPIO
+PF0		GPIO, PWM	// Also defined as SW2
+PF1		GPIO, PWM	// Also defined as RED_LED
+PF2		GPIO, PWM	// Also defined as BLUE_LED
+PF3		GPIO, PWM	// Also defined as GREEN_LED
+PF4		GPIO, PWM	// Also defined as SW1
+PF5		GPIO
+PF6		GPIO
+PF7		GPIO
+
+/************************GENERAL FUNCTIONS************************/
+void init(void);
+This function must be called at the beginning of main() in any program
+to configure the microcontroller to function with Stellarino.
+
+/*********************INPUT AND OUTPUT FUNCTIONS********************/
+NOTE: 	FOR ALL IO FUNCTIONS, PIN SHOULD BE SPECIFIED IN THE FORM PX#.
+		For example, Port A Pin 0 would be PA0. Pin names in this form
+		have been predefined as macros in the library.
+
+void pinMode(unsigned char pin, unsigned char mode);
+	Configures the given pin for the given mode.
+	mode should be one of the following (self-explanatory) macros:
+		INPUT
+		OUTPUT
+		INPUT_PULLUP
+		INPUT_PULLDOWN
+		INPUT_ANALOG
+		OUTPUT_PWM		// Approxiamtely 769 Hz PWM
+		OUTPUT_SERVO	// Standard servo pulses every 20 ms
+
+int digitalRead(unsigned char pin);
+	Reads a pin configured as a digital input and returns 1 or 0
+	depending on whether the pin is HIGH or LOW.
+
+int analogRead(unsigned char pin);
+	Uses the ADC to read the analog voltage on a pin configured for
+	analog input. Returns a value from 0 to 4095. Reading takes 13 to
+	23 microseconds.
+
+void digitalWrite(unsigned char pin, short val);
+	Writes a value to a pin configured for digital output.
+	val can either be the macros HIGH or LOW (or the numbers 1 or 0)
+
+void analogWrite(unsigned char pin, short val);
+	Sets the PWM duty cycle of a pin configured for PWM output.
+	val is the duty cycle, from 0 to 255. 0 is always off, 255 is
+	always on.
+
+void servoWrite(unsigned char pin, short val);
+	Sets the pulse length in microseconds for a pin configured for servo
+	pulse output.
+	val is the pulse length in microseconds. val must be between 600 and
+		2400 microseconds.
+
+unsigned long pulseIn(unsigned char pin, short val, unsigned long timeout);
+	Waits for a pulse to begin on a GPIO input pin until timeout, and
+	returns the length of the pulse in microseconds if a pulse is detected.
+	This function supports pulses with lengths between 1 us and 7 minutes.
+	val is the polarity of the pulse, HIGH or LOW (1 or 0)
+	timeout is the time to wait for a pulse to begin, in microseconds
+
+/*************************TIMING FUNCTIONS************************/
+void delay(unsigned long nTime);
+	Pause for nTime milliseconds. Supports pauses up to 5 days in length.
+
+void delayMicroseconds(unsigned long nTime);
+	Pause for nTime microseconds.
+
+void resetMillis(void);
+	Reset a timer that will measure elapsed time in milliseconds.
+
+unsigned long millis(void);
+	Returns the elapsed time in milliseconds since the millisecond timer was
+	last reset. This timer can count for up to almost 50 days.
+
+void resetMicros(void);
+unsigned long micros(void);
+	Similar to above, but time is measured in microseconds instead of
+	milliseconds. This timer can only count for 71 minutes.
+
+/**************************UART FUNCTIONS*************************/
+Please note that this is a work in progress, and many planned features
+have not yet been implemented. The functions listed below heve been
+implemented.
+
+The UART functions use UART0, which is connected to the ICDI on the
+Launchpad. Data is transmitted at 115200 baud, with 8 data bits and 1
+stop bit.
+
+void puts(const char * str);
+	Prints the string str over UART0. Please note that unlike the standard
+	C implementation of puts, this DOES NOT automatically append a newline.
+
+char * gets(char * str, int num);
+	Reads a string over UART until a newline is detected or the requested
+	number of characters have been read.
+	str is a pointer to a character array (C-style string) to which the
+		string is read.
+	num is the maximum number of characters to read (including the string
+		termination character '\0')
+
+void putc(char c);
+	Prints the character c over UART.
+
+void putln(void);
+	Prints a CRLF newline over UART.
+
+char getc(void);
+	Returns a character read over UART. Waits for a character if one is not
+	yet available. The character is erased from the buffer once read.
+
+char peek(void);
+	Returns the next character from the buffer without clearing it.
+	Successive calls to peek() and peekBlocking, and the next call to getc()
+	will return the same character. Returns a character with value -1 if
+	the buffer is empty.
+
+char peekBlocking(void);
+	Returns the next character from the buffer without clearing it.
+	Successive calls to peek() and peekBlocking, and the next call to getc()
+	will return the same character. Waits for a character if the buffer is
+	empty.
+
+void puti(long i);
+	Prints the signed long integer i as a decimal.
+
+long geti(void);
+	Gets a decimal signed long integer over UART and returns it.

@@ -1,0 +1,50 @@
+/**********************STELLARINO CHANGELOG**********************/
+              Copyright (C) 2012 Sultan Qasim Khan
+
+Stellarino is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Stellarino is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Stellarino.  If not, see <http://www.gnu.org/licenses/>.
+/*****************************************************************/
+
+Version History:
+0.1     Dec 14, 2012    Initial version. Basic init() function, delay() and
+						delayMicroseconds(), basic GPIO functions, i.e.
+						pinMode(), digitalWrite(), digitalRead().
+
+0.2		Dec 15, 2012	Power-saving interrupt based delay() function that
+						puts processor to sleep during a delay implemented.
+						The improved delay function allows delays up to almost
+						5 days length. Crude pulseIn() function implemented.
+
+0.3		Dec 17, 2012	PWM output implemented with the analogWrite() function.
+						Servo signal PWM mode added, and servoWrite() function
+						created for interfacing. Much improved implementation
+						of pulseIn() created using a timer instead of empirical
+						timing.
+
+0.4		Dec 18, 2012	Implement analogRead() and analog pin configuration.
+						Added timer functions using WTIMER4 to track elapsed time.
+						Broke off pin multiplexing and other global constant arrays
+						into stellarino_pins.h for better organization. Delay
+						functions grouped with timer functions in stellarino_timer.h
+						Switched PDL commands to ROM versions to reduce binary size.
+
+0.5		Dec 19, 2012	Implement basic FOSS UART library to eliminate dependence on
+						incompatibly licensed UARTstdio library. Rename timer
+						functions to millis() and micros() to better match Wiring.
+						Modify timer functions to count one unit of time per timer
+						tick instead of one per ten ticks. This increases the range
+						of the timers ten-fold. Timers are now started automatically
+						upon init() to better match Wiring, but the ability to reset
+						the timers has been maintained. Fixed delayMicroseconds().
+						Added example using the setup() and loop() structure of Wiring
+						sketches.
