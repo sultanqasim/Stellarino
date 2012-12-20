@@ -20,8 +20,8 @@
 #include "stellarino.h"
 
 void init(void) {
-	// Set system clock to 50 MHz
-	ROM_SysCtlClockSet(SYSCTL_SYSDIV_4|SYSCTL_USE_PLL|SYSCTL_XTAL_16MHZ|SYSCTL_OSC_MAIN);
+	// Set system clock to 80 MHz
+	ROM_SysCtlClockSet(SYSCTL_SYSDIV_2_5|SYSCTL_USE_PLL|SYSCTL_XTAL_16MHZ|SYSCTL_OSC_MAIN);
 
 	// Enable FPU and allow floating point operations in interrupts
 	ROM_FPUEnable();
@@ -41,8 +41,8 @@ void init(void) {
 	// Configure WTIMER4 for Timer functions
 	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_WTIMER4);
 	ROM_TimerConfigure(WTIMER4_BASE, (TIMER_CFG_SPLIT_PAIR | TIMER_CFG_A_ONE_SHOT | TIMER_CFG_B_ONE_SHOT));
-	ROM_TimerPrescaleSet(WTIMER4_BASE, TIMER_A, 49999);			// 1 ms per cycle
-	ROM_TimerPrescaleSet(WTIMER4_BASE, TIMER_B, 49);			// 1 us per cycle
+	ROM_TimerPrescaleSet(WTIMER4_BASE, TIMER_A, 79999);			// 1 ms per cycle
+	ROM_TimerPrescaleSet(WTIMER4_BASE, TIMER_B, 79);			// 1 us per cycle
 	ROM_SysCtlPeripheralSleepEnable(SYSCTL_PERIPH_WTIMER4);
 	ROM_TimerEnable(WTIMER4_BASE, TIMER_A);
 	ROM_TimerEnable(WTIMER4_BASE, TIMER_B);
@@ -50,8 +50,8 @@ void init(void) {
 	// Configure WTIMER5 for delay() function
 	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_WTIMER5);
 	ROM_TimerConfigure(WTIMER5_BASE, (TIMER_CFG_SPLIT_PAIR | TIMER_CFG_A_ONE_SHOT | TIMER_CFG_B_ONE_SHOT));
-	ROM_TimerPrescaleSet(WTIMER5_BASE, TIMER_A, 4999);			// 0.1 ms per cycle
-	ROM_TimerPrescaleSet(WTIMER5_BASE, TIMER_B, 4);				// 0.1 us per cycle
+	ROM_TimerPrescaleSet(WTIMER5_BASE, TIMER_A, 7999);			// 0.1 ms per cycle
+	ROM_TimerPrescaleSet(WTIMER5_BASE, TIMER_B, 7);				// 0.1 us per cycle
 	TimerIntRegister(WTIMER5_BASE, TIMER_A, delayInterrupt);	// Attach interrupt to function
 	ROM_IntMasterEnable();	// Enable interrupts
 	ROM_SysCtlPeripheralSleepEnable(SYSCTL_PERIPH_WTIMER5);

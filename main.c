@@ -18,7 +18,6 @@
 */
 
 #include "stellarino.h"
-
 void setup();
 void loop();
 

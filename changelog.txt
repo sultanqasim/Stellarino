@@ -48,3 +48,6 @@ Version History:
 						the timers has been maintained. Fixed delayMicroseconds().
 						Added example using the setup() and loop() structure of Wiring
 						sketches.
+
+0.6		Dec 20, 2012	Increase clock speed to 80 MHz and adjust timer setup
+						appropriately.

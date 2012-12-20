@@ -36,10 +36,10 @@ void delayInterrupt(void) {
 
 void delayMicroseconds(unsigned long nTime) {
 	if (!nTime);
-	else if (nTime < 3) SysCtlDelay(6 * nTime);	// empirical
+	else if (nTime < 3) SysCtlDelay(12 * nTime);	// empirical
 	else {
 		// Compensates for latency
-		unsigned long endtime = micros() + nTime - 2;
+		unsigned long endtime = micros() + nTime - 1;
 		while(micros() < endtime);
 	}
 }
