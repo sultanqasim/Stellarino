@@ -16,7 +16,7 @@ along with Stellarino.  If not, see <http://www.gnu.org/licenses/>.
 /*****************************************************************/
 
 Version History:
-0.1     Dec 14, 2012    Initial version. Basic init() function, delay() and
+0.1		Dec 14, 2012	Initial version. Basic init() function, delay() and
 						delayMicroseconds(), basic GPIO functions, i.e.
 						pinMode(), digitalWrite(), digitalRead().
 
