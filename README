@@ -204,3 +204,23 @@ void puti(long i);
 
 long geti(void);
 	Gets a decimal signed long integer over UART and returns it.
+
+void putu(unsigned long u, unsigned char digits);
+	Prints the unsigned long integer u as a decimal. Adds leading zeroes or
+	truncates as required to match given number of digits.
+	digits is the number of digits desired.
+
+unsigned long getu(unsigned char digits);
+	Gets a decimal unsigned long integer over UART and returns it. Reads up
+	to a non numeric character or till the digit limit.
+	digits is the maximum number of digits to read.
+
+void puth(unsigned long h, unsigned char digits);
+	Prints the unsigned long integer h as a hexadecimal. Adds leading
+	zeroes or truncates as required to match given number of digits.
+	digits is the number of digits desired.
+
+unsigned long geth(unsigned char digits);
+	Gets a hexadecimal unsigned long integer over UART and returns it. Reads
+	up to a non numeric character or till the digit limit.
+	digits is the maximum number of digits to read.

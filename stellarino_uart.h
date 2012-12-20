@@ -38,13 +38,13 @@ char peekBlocking(void);
 void puti(long i);
 long geti(void);
 
-/* Coming soon
 void putu(unsigned long u, unsigned char digits);
 unsigned long getu(unsigned char digits);
 
 void puth(unsigned long h, unsigned char digits);
 unsigned long geth(unsigned char digits);
 
+/* Coming soon
 void putf(float f, unsigned char digits);
 float getf(unsigned char digits);
 */

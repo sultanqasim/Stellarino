@@ -112,14 +112,14 @@ void puti(long i) {
 		for (b = 1; b < a + neg; b++) reversed[b] = digs[a-b];
 		a += 1;	// Extend the length of the string by 1 due to - sign
 	}
-	else for (b = 0; b < a + neg; b++) reversed[b] = digs[a-b-1];
+	else for (b = 0; b < a; b++) reversed[b] = digs[a-b-1];
 
 	reversed[a] = '\0';
 	puts((char *)reversed);
 }
 
 long geti() {
-	unsigned char digs[11], a, b, neg = 0;
+	unsigned char digs[10], a, b, neg = 0;
 
 	// Clear the leading non-number characters
 	peekBlocking();	// Peeked char is now in peekedChar
@@ -129,17 +129,14 @@ long geti() {
 	}
 
 	// Read in digits
-	for (a = 0; a < 11; a++) {
+	for (a = 0; a < 10; a++) {
 		digs[a] = getc();
 		if (digs[a] == '-') {
 			neg ^= 1;
 			a--;	// No digit was read
 			continue;
 		}
-		else if (digs[a] < 48 || digs[a] > 57 || a == 10) {
-			digs[a] = '\0';
-			break;
-		}
+		else if (digs[a] < 48 || digs[a] > 57) break;
 	}
 
 	// Convert to integer
@@ -150,13 +147,114 @@ long geti() {
 	return i;
 }
 
+void putu(unsigned long u, unsigned char digits) {
+	if (digits > 10) digits = 10;
+
+	unsigned char digs[11], reversed[11], a = 0, b, c;
+
+	do {
+		b = u % 10;
+		digs[a] = b + 48;	// Convert to digit ASCII
+		u /= 10;
+		a++;
+	} while (u);
+
+	// Add padding zeroes if necessary
+	b = 0;
+	if(a < digits) {
+		for(; b < digits - a; b++) reversed[b] = '0';
+	}
+
+	// Reverse the digits into most significant to least significant
+	for (c = 0; b < digits; b++, c++) reversed[b] = digs[a-c-1];
+
+	reversed[digits] = '\0';
+	puts((char *)reversed);
+}
+
+unsigned long getu(unsigned char digits) {
+	if (digits > 10) digits = 10;
+
+	unsigned char digs[10], a, b;
+
+	// Clear the leading non-number characters
+	peekBlocking();	// Peeked char is now in peekedChar
+	while (peekedChar < 48 || peekedChar > 57) {
+		peeked = 0;
+		peekBlocking();
+	}
+
+	// Read in digits
+	for (a = 0; a < digits; a++) {
+		digs[a] = getc();
+		if (digs[a] < 48 || digs[a] > 57) break;
+	}
+
+	// Convert to integer
+	unsigned long u = 0;
+	for (b = 0; b < a; b++) u += (digs[b] - 48) * power(10, a-b-1);
+
+	return u;
+}
+
+void puth(unsigned long h, unsigned char digits) {
+	if (digits > 8) digits = 8;
+
+	unsigned char digs[9], reversed[9], a = 0, b, c;
+
+	do {
+		b = h % 16;
+		// Convert to digit ASCII
+		if (b < 10) digs[a] = b + 48;
+		else digs[a] = b + 55;
+		h /= 16;
+		a++;
+	} while (h);
+
+	// Add padding zeroes if necessary
+	b = 0;
+	if(a < digits) {
+		for(; b < digits - a; b++) reversed[b] = '0';
+	}
+
+	// Reverse the digits into most significant to least significant
+	for (c = 0; b < digits; b++, c++) reversed[b] = digs[a-c-1];
+
+	reversed[digits] = '\0';
+	puts((char *)reversed);
+}
+
+unsigned long geth(unsigned char digits) {
+	if (digits > 8) digits = 8;
+
+	unsigned char digs[8], a, b;
+
+	// Clear the leading non-number characters
+	peekBlocking();	// Peeked char is now in peekedChar
+	while (! ((peekedChar > 47 && peekedChar < 58) ||
+			(peekedChar > 64 && peekedChar < 71)) ) {
+		peeked = 0;
+		peekBlocking();
+	}
+
+	// Read in digits
+	for (a = 0; a < digits; a++) {
+		digs[a] = getc();
+		if (! ((digs[a] > 47 && digs[a] < 58) ||
+				(digs[a] > 64 && digs[a] < 71)) ) break;
+	}
+
+	// Convert to integer
+	unsigned long h = 0;
+	for (b = 0; b < a; b++) {
+		if (digs[b] < 58) h += (digs[b] - 48) * power(16, a-b-1);
+		else h += (digs[b] - 55) * power(16, a-b-1);
+	}
+
+	return h;
+}
+
 /* Coming soon
-void putu(unsigned long u, unsigned char digits);
-unsigned long getu(unsigned char digits);
-
-void puth(unsigned long h, unsigned char digits);
-unsigned long geth(unsigned char digits);
-
 void putf(float f, unsigned char digits);
 float getf(unsigned char digits);
 */

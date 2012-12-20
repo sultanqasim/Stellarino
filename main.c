@@ -18,6 +18,7 @@
 */
 
 #include "stellarino.h"
+
 void setup();
 void loop();
 
@@ -57,3 +58,19 @@ int main(void) {
 }
 */
 
+/*
+// UART Test code
+int main() {
+	init();
+	while(1) {
+		puts("Enter numbers:\n");
+		unsigned long a = geth(10), b = geth(10);
+		putu(a, 10);
+		puts(" + ");
+		putu(b, 10);
+		puts(" = ");
+		putu(a + b, 10);
+		putln();
+	}
+}
+*/
