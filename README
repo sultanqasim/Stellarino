@@ -24,12 +24,12 @@ It uses syntax similar to Wiring to ease the introduction of newcomers
 familiar with the Arduino and similar boards to the Stellaris platform.
 
 Stellarino implements functions for configuration, delays, using timers,
-GPIO, analog input, PWM, controlling hobby-style servomotors, and possibly
+GPIO, analog input, PWM, controlling hobby-style servomotors, UART, and
 more. It was created using the TI StellarisWare Peripheral Driver Library.
 It thus requires StellarisWare and a suitable IDE, such as TI Code Composer
 Studio in order to function. Since Stellarino implements all basic
 functionality using the StellarisWare PDL with simple, easy to understand
-code, it also makes a good introductory example for the use of the PDL.
+code, it also makes a good introductory example for use of the PDL.
 
 /*************************PIN MULTIPLEXING*************************/
 Pin		Possible Use(s) in Stellarino
@@ -114,6 +114,9 @@ int analogRead(unsigned char pin);
 
 void digitalWrite(unsigned char pin, short val);
 	Writes a value to a pin configured for digital output.
+	Please note that writing HIGH to an input pin will not give it
+	pullup resistance. For pullup and pulldown, use the appropriate
+	setting in pinMode.
 	val can either be the macros HIGH or LOW (or the numbers 1 or 0)
 
 void analogWrite(unsigned char pin, short val);
