@@ -34,10 +34,12 @@
 #include "driverlib/timer.h"
 #include "driverlib/adc.h"
 #include "driverlib/uart.h"
+#include "driverlib/ssi.h"
 
 #include "stellarino_pins.h"
 #include "stellarino_timer.h"
 #include "stellarino_uart.h"
+#include "stellarino_spi.h"
 
 #define INPUT 0
 #define OUTPUT 1
@@ -59,6 +61,5 @@ void digitalWrite(unsigned char pin, short val);
 void analogWrite(unsigned char pin, short val);
 void servoWrite(unsigned char pin, short val);
 unsigned long pulseIn(unsigned char pin, short val, unsigned long timeout);
-// Timer and delay functions are declared in stellarino_timer.h
 
 #endif

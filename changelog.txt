@@ -38,8 +38,8 @@ Version History:
 						functions grouped with timer functions in stellarino_timer.h
 						Switched PDL commands to ROM versions to reduce binary size.
 
-0.5		Dec 19, 2012	Implemented basic FOSS UART library to eliminate dependence on
-						incompatibly licensed UARTstdio library. Renamed timer
+0.5		Dec 19, 2012	Implemented basic FOSS UART library to eliminate dependence
+						on incompatibly licensed UARTstdio library. Renamed timer
 						functions to millis() and micros() to better match Wiring.
 						Modified timer functions to count one unit of time per timer
 						tick instead of one per ten ticks. This increased the range
@@ -52,3 +52,7 @@ Version History:
 0.6		Dec 20, 2012	Increased clock speed to 80 MHz and adjusted timer setup
 						appropriately. Added UART functions for unsigned decimal and
 						hexadecimal input and output.
+
+0.7		Dec 26, 2012	Added SPI (master) support. Increased stack size to 512 bytes
+						to permit more complex programs and the safe use of printf and
+						similarly complex functions.

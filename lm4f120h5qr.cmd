@@ -21,7 +21,7 @@ MEMORY
 /* modifications in your CCS project and leave this file alone.              */
 /*                                                                           */
 /* --heap_size=0                                                             */
-/* --stack_size=256                                                          */
+/* --stack_size=512                                                          */
 /* --library=rtsv7M4_T_le_eabi.lib                                           */
 
 /* Section allocation in memory */
@@ -41,4 +41,4 @@ SECTIONS
     .stack  :   > SRAM
 }
 
-__STACK_TOP = __stack + 256;
+__STACK_TOP = __stack + 512;

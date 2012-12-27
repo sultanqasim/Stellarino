@@ -58,19 +58,8 @@ void init(void) {
 }
 
 void pinMode(unsigned char pin, unsigned char mode) {
-	const unsigned long ROM_SysCtlGPIOs[6] = {
-			SYSCTL_PERIPH_GPIOA, SYSCTL_PERIPH_GPIOB, SYSCTL_PERIPH_GPIOC,
-			SYSCTL_PERIPH_GPIOD, SYSCTL_PERIPH_GPIOE, SYSCTL_PERIPH_GPIOF
-	};
-	const unsigned long ROM_SysCtlTimers[12] = {
-			SYSCTL_PERIPH_TIMER0, SYSCTL_PERIPH_TIMER1, SYSCTL_PERIPH_TIMER2,
-			SYSCTL_PERIPH_TIMER3, SYSCTL_PERIPH_TIMER4, SYSCTL_PERIPH_TIMER5,
-			SYSCTL_PERIPH_WTIMER0, SYSCTL_PERIPH_WTIMER1, SYSCTL_PERIPH_WTIMER2,
-			SYSCTL_PERIPH_WTIMER3, SYSCTL_PERIPH_WTIMER4, SYSCTL_PERIPH_WTIMER5
-	};
-
-	ROM_SysCtlPeripheralEnable(ROM_SysCtlGPIOs[pin/8]);
-	ROM_SysCtlPeripheralSleepEnable(ROM_SysCtlGPIOs[pin/8]);
+	ROM_SysCtlPeripheralEnable(SysCtlGPIOs[pin/8]);
+	ROM_SysCtlPeripheralSleepEnable(SysCtlGPIOs[pin/8]);
 
 	switch (mode) {
 	case INPUT:
@@ -95,8 +84,8 @@ void pinMode(unsigned char pin, unsigned char mode) {
 		break;
 	case OUTPUT_PWM:
 		if (pinMux[pin][0] == 12) break;
-		ROM_SysCtlPeripheralEnable(ROM_SysCtlTimers[pinMux[pin][0]]);
-		ROM_SysCtlPeripheralSleepEnable(ROM_SysCtlTimers[pinMux[pin][0]]);
+		ROM_SysCtlPeripheralEnable(SysCtlTimers[pinMux[pin][0]]);
+		ROM_SysCtlPeripheralSleepEnable(SysCtlTimers[pinMux[pin][0]]);
 		ROM_GPIOPadConfigSet(GPIO[pin/8], bit8[pin%8], GPIO_STRENGTH_8MA, GPIO_PIN_TYPE_STD);
 		ROM_GPIOPinTypeTimer(GPIO[pin/8], bit8[pin%8]);
 		ROM_GPIOPinConfigure(pinMux[pin][2]);
@@ -110,8 +99,8 @@ void pinMode(unsigned char pin, unsigned char mode) {
 	case OUTPUT_SERVO:
 		// A pin connected to a wide timer is required for servo output
 		if (pinMux[pin][0] == 12 || pinMux[pin][0] < 6) break;
-		ROM_SysCtlPeripheralEnable(ROM_SysCtlTimers[pinMux[pin][0]]);
-		ROM_SysCtlPeripheralSleepEnable(ROM_SysCtlTimers[pinMux[pin][0]]);
+		ROM_SysCtlPeripheralEnable(SysCtlTimers[pinMux[pin][0]]);
+		ROM_SysCtlPeripheralSleepEnable(SysCtlTimers[pinMux[pin][0]]);
 		ROM_GPIOPinTypeTimer(GPIO[pin/8], bit8[pin%8]);
 		ROM_GPIOPinConfigure(pinMux[pin][2]);
 		ROM_TimerConfigure(TIMER[pinMux[pin][0]], (TIMER_CFG_SPLIT_PAIR | TIMER_CFG_A_PWM | TIMER_CFG_B_PWM));

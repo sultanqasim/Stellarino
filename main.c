@@ -17,6 +17,7 @@
 	along with Stellarino.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/*
 #include "stellarino.h"
 
 void setup();
@@ -39,9 +40,11 @@ void loop() {
 	digitalWrite(PF2, LOW);
 	delay(500);
 }
+*/
 
 /* 2-Speed LED Fade Example
 #include "stellarino.h"
+
 int main(void) {
 	init();
 	pinMode(SW1, INPUT_PULLUP);
@@ -59,8 +62,10 @@ int main(void) {
 */
 
 /*
-// UART Test code
-int main() {
+// UART Adder Demo Code
+#include "stellarino.h"
+
+int main(void) {
 	init();
 	while(1) {
 		puts("Enter numbers:\n");
@@ -74,3 +79,30 @@ int main() {
 	}
 }
 */
+
+// MCP4921 DAC Demo using SPI
+// Generates a sine wave, with the DAC connected to SSI0 and the
+// LDAC pin on PD0. SPI communication at 16 MHz.
+#include "stellarino.h"
+#include <cmath>
+
+void DACWrite(short val);
+
+int main(void) {
+	init();
+	pinMode(PD0, OUTPUT);
+	enableSPI(0, 16, 16000000);
+	float f = 0;
+	while (1) {
+		DACWrite(sin(f) * 2047 + 2048);
+		f += 0.05;
+	}
+}
+
+void DACWrite(short val) {
+	if (val < 0) val = 0;
+	else if (val > 4095) val = 4095;
+	SPIWrite(0, val + bit16[12] + bit16[13]);
+	digitalWrite(PD0, LOW);
+	digitalWrite(PD0, HIGH);
+}

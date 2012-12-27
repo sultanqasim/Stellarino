@@ -35,10 +35,10 @@ code, it also makes a good introductory example for use of the PDL.
 Pin		Possible Use(s) in Stellarino
 PA0		GPIO
 PA1		GPIO
-PA2		GPIO
-PA3		GPIO
-PA4		GPIO
-PA5		GPIO
+PA2		GPIO, SSI0 SCK
+PA3		GPIO, SSI0 SS
+PA4		GPIO, SSI0 MISO
+PA5		GPIO, SSI0 MOSI
 PA6		GPIO
 PA7		GPIO
 PB0		GPIO, PWM
@@ -57,10 +57,10 @@ PC4		GPIO, PWM, Servo
 PC5		GPIO, PWM, Servo
 PC6		GPIO, PWM, Servo
 PC7		GPIO, PWM, Servo
-PD0		GPIO, PWM, Servo, ADC
-PD1		GPIO, PWM, Servo, ADC
-PD2		GPIO, PWM, Servo, ADC
-PD3		GPIO, PWM, Servo, ADC
+PD0		GPIO, PWM, Servo, ADC, SSI1 SCK
+PD1		GPIO, PWM, Servo, ADC, SSI1 SS
+PD2		GPIO, PWM, Servo, ADC, SSI1 MISO
+PD3		GPIO, PWM, Servo, ADC, SSI1 MOSI
 PD4		GPIO
 PD5		GPIO
 PD6		GPIO
@@ -224,3 +224,21 @@ unsigned long geth(unsigned char digits);
 	Gets a hexadecimal unsigned long integer over UART and returns it. Reads
 	up to a non numeric character or till the digit limit.
 	digits is the maximum number of digits to read.
+
+/**************************SPI/SSI FUNCTIONS*************************/
+void enableSPI(unsigned short SPINum, unsigned short wordLength, unsigned long dataRate);
+	Enables the selected SPI, and configures it for a specified
+	word length in bits at a data rate specified in Hz. The pins associated
+	with the selected SPI will be configured for SPI.
+	SPINum is the number of the SPI (0 to 3)
+	wordLenth is the length of each word in bits
+	dataRate is the transmission rate in Hz
+
+void SPIWrite(unsigned short SPINum, unsigned long data);
+	Writes the given data to the selected SPI.
+	SPINum is the number of the SPI
+	data is the word to be transmitted
+
+unsigned long SPIRead(unsigned short SPINum);
+	Reads a word from the selected SPI. Will wait for data if buffer empty.
+	SPINum is the number of the SPI
