@@ -1,4 +1,4 @@
-/*  LED Fade Demo Program
+/*  Stellarino Demo Programs
     Copyright (C) 2012 Sultan Qasim Khan
 
     This is part of Stellarino.
