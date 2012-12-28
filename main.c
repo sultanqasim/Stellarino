@@ -17,7 +17,6 @@
 	along with Stellarino.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*
 #include "stellarino.h"
 
 void setup();
@@ -40,7 +39,6 @@ void loop() {
 	digitalWrite(PF2, LOW);
 	delay(500);
 }
-*/
 
 /* 2-Speed LED Fade Example
 #include "stellarino.h"
@@ -80,6 +78,7 @@ int main(void) {
 }
 */
 
+/*
 // MCP4921 DAC Demo using SPI
 // Generates a sawtooth wave, with the DAC connected to SSI0 and the
 // LDAC pin on PD0. SPI communication at 16 MHz.
@@ -107,3 +106,4 @@ void DACWrite(short val) {
 	digitalWrite(PD0, LOW);
 	digitalWrite(PD0, HIGH);
 }
+*/
