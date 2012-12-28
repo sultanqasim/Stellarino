@@ -36,6 +36,7 @@ const unsigned long SSIBase[4] = {
 
 void enableSPI(unsigned short SPINum, unsigned short wordLength, unsigned long dataRate) {
 	ROM_SysCtlPeripheralEnable(SysCtlSSI[SPINum]);
+	ROM_SysCtlPeripheralSleepEnable(SysCtlSSI[SPINum]);
 	ROM_SysCtlPeripheralEnable(GPIO[ SPIPins[SPINum][0]/8 ]);
 
 	int i;

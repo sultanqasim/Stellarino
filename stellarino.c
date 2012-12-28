@@ -58,6 +58,9 @@ void init(void) {
 }
 
 void pinMode(unsigned char pin, unsigned char mode) {
+	// Anti-brick JTAG Protection
+	if (pin >= PC0 && pin <= PC3) return;
+
 	ROM_SysCtlPeripheralEnable(SysCtlGPIOs[pin/8]);
 	ROM_SysCtlPeripheralSleepEnable(SysCtlGPIOs[pin/8]);
 

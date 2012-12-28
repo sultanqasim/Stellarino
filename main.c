@@ -81,10 +81,9 @@ int main(void) {
 */
 
 // MCP4921 DAC Demo using SPI
-// Generates a sine wave, with the DAC connected to SSI0 and the
+// Generates a sawtooth wave, with the DAC connected to SSI0 and the
 // LDAC pin on PD0. SPI communication at 16 MHz.
 #include "stellarino.h"
-#include <cmath>
 
 void DACWrite(short val);
 
@@ -92,10 +91,12 @@ int main(void) {
 	init();
 	pinMode(PD0, OUTPUT);
 	enableSPI(0, 16, 16000000);
-	float f = 0;
+	short a = 0;
 	while (1) {
-		DACWrite(sin(f) * 2047 + 2048);
-		f += 0.05;
+		if (a > 4095) a = 0;
+		DACWrite(a);
+		a += 5;
+		delayMicroseconds(5);
 	}
 }
 

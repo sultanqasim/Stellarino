@@ -56,3 +56,5 @@ Version History:
 0.7		Dec 26, 2012	Added SPI (master) support. Increased stack size to 512 bytes
 						to permit more complex programs and the safe use of printf and
 						similarly complex functions. Add MCP4921 DAC demo using SPI.
+						Set up release compile configuration. Added code to prevent
+						bricking through reconfiguring the JTAG pins.
