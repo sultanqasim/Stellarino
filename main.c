@@ -103,6 +103,8 @@ void DACWrite(short val) {
 	if (val < 0) val = 0;
 	else if (val > 4095) val = 4095;
 	SPIWrite(0, val + bit16[12] + bit16[13]);
+
+	// Trigger output on DAC
 	digitalWrite(PD0, LOW);
 	digitalWrite(PD0, HIGH);
 }

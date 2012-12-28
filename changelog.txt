@@ -57,4 +57,4 @@ Version History:
 						to permit more complex programs and the safe use of printf and
 						similarly complex functions. Add MCP4921 DAC demo using SPI.
 						Set up release compile configuration. Added code to prevent
-						bricking through reconfiguring the JTAG pins.
+						bricking through accidentally reconfiguring the JTAG pins.
