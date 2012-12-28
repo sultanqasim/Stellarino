@@ -67,12 +67,12 @@ int main(void) {
 	init();
 	while(1) {
 		puts("Enter numbers:\n");
-		unsigned long a = geth(10), b = geth(10);
-		putu(a, 10);
+		long a = geti(), b = geti();
+		puti(a);
 		puts(" + ");
-		putu(b, 10);
+		puti(b);
 		puts(" = ");
-		putu(a + b, 10);
+		puti(a + b);
 		putln();
 	}
 }
