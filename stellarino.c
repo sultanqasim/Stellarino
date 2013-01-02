@@ -95,7 +95,7 @@ void pinMode(unsigned char pin, unsigned char mode) {
 		ROM_TimerConfigure(TIMER[pinMux[pin][0]], (TIMER_CFG_SPLIT_PAIR | TIMER_CFG_A_PWM | TIMER_CFG_B_PWM));
 		ROM_TimerPrescaleSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 0);		// ~1230 Hz PWM
 		ROM_TimerLoadSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 65279);		// Timer will load this value on timeout
-		ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 65280);	// Initial duty cycle of 0
+		ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 65278);	// Initial duty cycle of 0
 		ROM_TimerControlLevel(TIMER[pinMux[pin][0]], pinMux[pin][1], 0);
 		ROM_TimerEnable(TIMER[pinMux[pin][0]], pinMux[pin][1]);
 		break;
@@ -143,7 +143,8 @@ void digitalWrite(unsigned char pin, short val) {
 
 void analogWrite(unsigned char pin, short val) {
 	if (val > 255) val = 255;
-	ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 65280 - (256 * val));
+	if (val == 0) ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 65278);
+	else ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 65280 - (256 * val));
 }
 
 void servoWrite(unsigned char pin, short val) {

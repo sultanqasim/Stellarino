@@ -58,3 +58,6 @@ Version History:
 						similarly complex functions. Add MCP4921 DAC demo using SPI.
 						Set up release compile configuration. Added code to prevent
 						bricking through accidentally reconfiguring the JTAG pins.
+
+0.8		Jan 1, 2013		Fixed 0 duty cycle PWM. Added instructions to README for
+						building driverlib-cm4f.
