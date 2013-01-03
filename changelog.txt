@@ -60,4 +60,6 @@ Version History:
 						bricking through accidentally reconfiguring the JTAG pins.
 
 0.8		Jan 1, 2013		Fixed 0 duty cycle PWM. Added instructions to README for
-						building driverlib-cm4f.
+						building driverlib-cm4f. Added post-build step to create a
+						flashable .bin file. Added vector table to permit code to run
+						automatically after a reset.

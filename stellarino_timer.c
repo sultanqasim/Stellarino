@@ -35,7 +35,7 @@ void delayInterrupt(void) {
 }
 
 void delayMicroseconds(unsigned long nTime) {
-	if (!nTime);
+	if (!nTime) return;
 	else if (nTime < 3) SysCtlDelay(12 * nTime);	// empirical
 	else {
 		// Compensates for latency

@@ -31,6 +31,7 @@ void init(void) {
 	// UART will run at 115200 baud, 8 data bits, 1 stop bit
 	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
 	ROM_SysCtlPeripheralSleepEnable(SYSCTL_PERIPH_GPIOA);
+	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
 	ROM_GPIOPinConfigure(GPIO_PA0_U0RX);
 	ROM_GPIOPinConfigure(GPIO_PA1_U0TX);
 	ROM_GPIOPinTypeUART(GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1);
