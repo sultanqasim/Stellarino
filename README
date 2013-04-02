@@ -168,7 +168,7 @@ void resetMillis(void);
 
 unsigned long millis(void);
 	Returns the elapsed time in milliseconds since the millisecond timer was
-	last reset. This timer can count for up to almost 50 days.
+	last reset. This timer can count for up to almost 25 days.
 
 void resetMicros(void);
 unsigned long micros(void);

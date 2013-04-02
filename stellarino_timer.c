@@ -49,7 +49,7 @@ void resetMillis(void) {
 }
 
 unsigned long millis(void) {
-	return 4294967295 - ROM_TimerValueGet(WTIMER4_BASE, TIMER_A);
+	return (4294967295 - ROM_TimerValueGet(WTIMER4_BASE, TIMER_A)) / 2;
 }
 
 void resetMicros(void) {

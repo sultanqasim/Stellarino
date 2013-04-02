@@ -42,7 +42,7 @@ void init(void) {
 	// Configure WTIMER4 for Timer functions
 	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_WTIMER4);
 	ROM_TimerConfigure(WTIMER4_BASE, (TIMER_CFG_SPLIT_PAIR | TIMER_CFG_A_ONE_SHOT | TIMER_CFG_B_ONE_SHOT));
-	ROM_TimerPrescaleSet(WTIMER4_BASE, TIMER_A, 79999);			// 1 ms per cycle
+	ROM_TimerPrescaleSet(WTIMER4_BASE, TIMER_A, 39999);			// 0.5 ms per cycle
 	ROM_TimerPrescaleSet(WTIMER4_BASE, TIMER_B, 79);			// 1 us per cycle
 	ROM_SysCtlPeripheralSleepEnable(SYSCTL_PERIPH_WTIMER4);
 	ROM_TimerEnable(WTIMER4_BASE, TIMER_A);
