@@ -28,6 +28,7 @@ extern const unsigned long bit32[32];
 
 extern const unsigned long GPIO[6];
 extern const unsigned long TIMER[12];
+extern const unsigned long UARTBASE[8];
 extern const unsigned long pinMux[48][4];
 extern const unsigned long SysCtlGPIOs[6];
 extern const unsigned long SysCtlTimers[12];

@@ -1,5 +1,5 @@
 /**********************STELLARINO CHANGELOG**********************/
-              Copyright (C) 2012 Sultan Qasim Khan
+           Copyright (C) 2012-2013 Sultan Qasim Khan
 
 Stellarino is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -63,3 +63,7 @@ Version History:
 						building driverlib-cm4f. Added post-build step to create a
 						flashable .bin file. Added vector table to permit code to run
 						automatically after a reset.
+						
+0.9		Apr 7, 2013		Fixed millis() timer. Further increased stack size to 1024
+						bytes as there is no shortage of RAM on this MCU. Added new
+						UART functions for using UART ports other than UART0.

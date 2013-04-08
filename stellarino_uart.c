@@ -1,5 +1,5 @@
 /*  stellarino_uart.c
-    Copyright (C) 2012 Sultan Qasim Khan
+    Copyright (C) 2012-2013 Sultan Qasim Khan
 
     This is part of Stellarino.
 
@@ -19,7 +19,7 @@
 
 #include "stellarino_uart.h"
 
-char peekedChar, peeked = 0;
+char peekedChar[8], peeked[8] = {0};
 
 unsigned long power(unsigned long base, int exp) {
 	int res = 1;
@@ -29,28 +29,36 @@ unsigned long power(unsigned long base, int exp) {
 }
 
 void puts(const char * str) {
+	UARTputs(0, str);
+}
+
+void UARTputs(unsigned char UART, const char * str) {
 	int a = 0;
 	while (str[a] != '\0') {
 		if (str[a] == '\n') {
-			putc('\r');
-			putc('\n');
+			UARTputc(UART, '\r');
+			UARTputc(UART, '\n');
 		}
-		else putc(str[a]);
+		else UARTputc(UART, str[a]);
 		a++;
 	}
 }
 
 char * gets(char * str, int num) {
+	return UARTgets(0, str, num);
+}
+
+char * UARTgets(unsigned char UART, char * str, int num) {
 	int a = 0;
 	while (a < num - 1) {
-		str[a] = peekBlocking();	// Waits for a character
+		str[a] = UARTpeekBlocking(UART);	// Waits for a character
 		if (str[a] == '\n' || str[a] == '\r') break;
-		peeked = 0;	// Permits peek() to move on to the next char
+		peeked[UART] = 0;	// Permits peek() to move on to the next char
 		a++;
 	}
 
 	// Clear the trailing newline char(s)
-	while (peek() == '\n' || peek() == '\r') peeked = 0;
+	while (UARTpeek(UART) == '\n' || UARTpeek(UART) == '\r') peeked[UART] = 0;
 
 	str[a] = '\0';
 	return str;
@@ -60,38 +68,77 @@ void putc(char c) {
 	ROM_UARTCharPut(UART0_BASE, c);
 }
 
+void UARTputc(unsigned char UART, char c) {
+	ROM_UARTCharPut(UARTBASE[UART], c);
+}
+
 void putln(void) {
 	ROM_UARTCharPut(UART0_BASE, '\r');
 	ROM_UARTCharPut(UART0_BASE, '\n');
 }
 
+void UARTputln(unsigned char UART) {
+	ROM_UARTCharPut(UARTBASE[UART], '\r');
+	ROM_UARTCharPut(UARTBASE[UART], '\n');
+}
+
 char getc(void) {
-	if (peeked) {
-		peeked = 0;
-		return peekedChar;
+	if (peeked[0]) {
+		peeked[0] = 0;
+		return peekedChar[0];
 	}
 	while (!ROM_UARTCharsAvail(UART0_BASE));	// Wait for a char if buffer empty
 	return ROM_UARTCharGet(UART0_BASE);
 }
 
+char UARTgetc(unsigned char UART) {
+	if (peeked[UART]) {
+		peeked[UART] = 0;
+		return peekedChar[UART];
+	}
+	while (!ROM_UARTCharsAvail(UARTBASE[UART]));	// Wait for a char if buffer empty
+	return ROM_UARTCharGet(UARTBASE[UART]);
+}
+
 char peek(void) {
-	if (peeked) return peekedChar;	// Already peeked a char
+	if (peeked[0]) return peekedChar[0];	// Already peeked a char
 
 	if (!ROM_UARTCharsAvail(UART0_BASE)) return (char)-1;
 
-	peeked = 1;
-	return peekedChar = ROM_UARTCharGet(UART0_BASE);
+	peeked[0] = 1;
+	return peekedChar[0] = ROM_UARTCharGet(UART0_BASE);
+}
+
+char UARTpeek(unsigned char UART) {
+	if (peeked[UART]) return peekedChar[UART];	// Already peeked a char
+
+	if (!ROM_UARTCharsAvail(UARTBASE[UART])) return (char)-1;
+
+	peeked[UART] = 1;
+	return peekedChar[UART] = ROM_UARTCharGet(UARTBASE[UART]);
 }
 
 char peekBlocking(void) {
-	if (peeked) return peekedChar;	// Already peeked a char
+	if (peeked[0]) return peekedChar[0];	// Already peeked a char
 
 	while (!ROM_UARTCharsAvail(UART0_BASE));	// Wait for a char
-	peeked = 1;
-	return peekedChar = ROM_UARTCharGet(UART0_BASE);
+	peeked[0] = 1;
+	return peekedChar[0] = ROM_UARTCharGet(UART0_BASE);
+}
+
+char UARTpeekBlocking(unsigned char UART) {
+	if (peeked[UART]) return peekedChar[UART];	// Already peeked a char
+
+	while (!ROM_UARTCharsAvail(UARTBASE[UART]));	// Wait for a char
+	peeked[UART] = 1;
+	return peekedChar[UART] = ROM_UARTCharGet(UARTBASE[UART]);
 }
 
 void puti(long i) {
+	UARTputi(0, i);
+}
+
+void UARTputi(unsigned char UART, long i) {
 	unsigned char digs[12], reversed[12], a = 0, b, neg = 0;
 
 	if (i < 0) {
@@ -115,17 +162,21 @@ void puti(long i) {
 	else for (b = 0; b < a; b++) reversed[b] = digs[a-b-1];
 
 	reversed[a] = '\0';
-	puts((char *)reversed);
+	UARTputs(UART, (char *)reversed);
 }
 
 long geti() {
+	return UARTgeti(0);
+}
+
+long UARTgeti(unsigned char UART) {
 	unsigned char digs[10], a, b, neg = 0;
 
 	// Clear the leading non-number characters
-	peekBlocking();	// Peeked char is now in peekedChar
-	while ((peekedChar < 48 || peekedChar > 57) && peekedChar != '-') {
-		peeked = 0;
-		peekBlocking();
+	UARTpeekBlocking(UART);	// Peeked char is now in peekedChar
+	while ((peekedChar[UART] < 48 || peekedChar[UART] > 57) && peekedChar[UART] != '-') {
+		peeked[UART] = 0;
+		UARTpeekBlocking(UART);
 	}
 
 	// Read in digits
@@ -148,6 +199,10 @@ long geti() {
 }
 
 void putu(unsigned long u, unsigned char digits) {
+	UARTputu(0, u, digits);
+}
+
+void UARTputu(unsigned char UART, unsigned long u, unsigned char digits) {
 	if (digits > 10) digits = 10;
 
 	unsigned char digs[11], reversed[11], a = 0, b, c;
@@ -169,19 +224,23 @@ void putu(unsigned long u, unsigned char digits) {
 	for (c = 0; b < digits; b++, c++) reversed[b] = digs[a-c-1];
 
 	reversed[digits] = '\0';
-	puts((char *)reversed);
+	UARTputs(UART, (char *)reversed);
 }
 
 unsigned long getu(unsigned char digits) {
+	return UARTgetu(0, digits);
+}
+
+unsigned long UARTgetu(unsigned char UART, unsigned char digits) {
 	if (digits > 10) digits = 10;
 
 	unsigned char digs[10], a, b;
 
 	// Clear the leading non-number characters
-	peekBlocking();	// Peeked char is now in peekedChar
-	while (peekedChar < 48 || peekedChar > 57) {
-		peeked = 0;
-		peekBlocking();
+	UARTpeekBlocking(UART);	// Peeked char is now in peekedChar
+	while (peekedChar[UART] < 48 || peekedChar[UART] > 57) {
+		peeked[UART] = 0;
+		UARTpeekBlocking(UART);
 	}
 
 	// Read in digits
@@ -198,6 +257,10 @@ unsigned long getu(unsigned char digits) {
 }
 
 void puth(unsigned long h, unsigned char digits) {
+	UARTputh(0, h, digits);
+}
+
+void UARTputh(unsigned char UART, unsigned long h, unsigned char digits) {
 	if (digits > 8) digits = 8;
 
 	unsigned char digs[9], reversed[9], a = 0, b, c;
@@ -221,20 +284,24 @@ void puth(unsigned long h, unsigned char digits) {
 	for (c = 0; b < digits; b++, c++) reversed[b] = digs[a-c-1];
 
 	reversed[digits] = '\0';
-	puts((char *)reversed);
+	UARTputs(UART, (char *)reversed);
 }
 
 unsigned long geth(unsigned char digits) {
+	return UARTgeth(0, digits);
+}
+
+unsigned long UARTgeth(unsigned char UART, unsigned char digits) {
 	if (digits > 8) digits = 8;
 
 	unsigned char digs[8], a, b;
 
 	// Clear the leading non-number characters
-	peekBlocking();	// Peeked char is now in peekedChar
-	while (! ((peekedChar > 47 && peekedChar < 58) ||
-			(peekedChar > 64 && peekedChar < 71)) ) {
-		peeked = 0;
-		peekBlocking();
+	UARTpeekBlocking(UART);	// Peeked char is now in peekedChar
+	while (! ((peekedChar[UART] > 47 && peekedChar[UART] < 58) ||
+			(peekedChar[UART] > 64 && peekedChar[UART] < 71)) ) {
+		peeked[UART] = 0;
+		UARTpeekBlocking(UART);
 	}
 
 	// Read in digits
