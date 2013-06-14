@@ -108,72 +108,72 @@ to configure the microcontroller to function with Stellarino.
 
 /*********************INPUT AND OUTPUT FUNCTIONS********************/
 NOTE: 	FOR ALL IO FUNCTIONS, PIN SHOULD BE SPECIFIED IN THE FORM PX#.
-		For example, Port A Pin 0 would be PA0. Pin names in this form
-		have been predefined as macros in the library.
+        For example, Port A Pin 0 would be PA0. Pin names in this form
+        have been predefined as macros in the library.
 
 void pinMode(unsigned char pin, unsigned char mode);
-	Configures the given pin for the given mode.
-	mode should be one of the following (self-explanatory) macros:
-		INPUT
-		OUTPUT
-		INPUT_PULLUP
-		INPUT_PULLDOWN
-		INPUT_ANALOG
-		OUTPUT_PWM		// Approxiamtely 769 Hz PWM
-		OUTPUT_SERVO	// Standard servo pulses every 20 ms
+    Configures the given pin for the given mode.
+    mode should be one of the following (self-explanatory) macros:
+        INPUT
+        OUTPUT
+        INPUT_PULLUP
+        INPUT_PULLDOWN
+        INPUT_ANALOG
+        OUTPUT_PWM		// Approxiamtely 769 Hz PWM
+        OUTPUT_SERVO	// Standard servo pulses every 20 ms
 
 int digitalRead(unsigned char pin);
-	Reads a pin configured as a digital input and returns 1 or 0
-	depending on whether the pin is HIGH or LOW.
+    Reads a pin configured as a digital input and returns 1 or 0
+    depending on whether the pin is HIGH or LOW.
 
 int analogRead(unsigned char pin);
-	Uses the ADC to read the analog voltage on a pin configured for
-	analog input. Returns a value from 0 to 4095. Reading takes 13 to
-	23 microseconds.
+    Uses the ADC to read the analog voltage on a pin configured for
+    analog input. Returns a value from 0 to 4095. Reading takes 13 to
+    23 microseconds.
 
 void digitalWrite(unsigned char pin, short val);
-	Writes a value to a pin configured for digital output.
-	Please note that writing HIGH to an input pin will not give it
-	pullup resistance. For pullup and pulldown, use the appropriate
-	setting in pinMode.
-	val can either be the macros HIGH or LOW (or the numbers 1 or 0)
+    Writes a value to a pin configured for digital output.
+    Please note that writing HIGH to an input pin will not give it
+    pullup resistance. For pullup and pulldown, use the appropriate
+    setting in pinMode.
+    val can either be the macros HIGH or LOW (or the numbers 1 or 0)
 
 void analogWrite(unsigned char pin, short val);
-	Sets the PWM duty cycle of a pin configured for PWM output.
-	val is the duty cycle, from 0 to 255. 0 is always off, 255 is
-	always on.
+    Sets the PWM duty cycle of a pin configured for PWM output.
+    val is the duty cycle, from 0 to 255. 0 is always off, 255 is
+    always on.
 
 void servoWrite(unsigned char pin, short val);
-	Sets the pulse length in microseconds for a pin configured for servo
-	pulse output.
-	val is the pulse length in microseconds. val must be between 600 and
-		2400 microseconds.
+    Sets the pulse length in microseconds for a pin configured for servo
+    pulse output.
+    val is the pulse length in microseconds. val must be between 600 and
+        2400 microseconds.
 
 unsigned long pulseIn(unsigned char pin, short val, unsigned long timeout);
-	Waits for a pulse to begin on a GPIO input pin until timeout, and
-	returns the length of the pulse in microseconds if a pulse is detected.
-	This function supports pulses with lengths between 1 us and 7 minutes.
-	val is the polarity of the pulse, HIGH or LOW (1 or 0)
-	timeout is the time to wait for a pulse to begin, in microseconds
+    Waits for a pulse to begin on a GPIO input pin until timeout, and
+    returns the length of the pulse in microseconds if a pulse is detected.
+    This function supports pulses with lengths between 1 us and 7 minutes.
+    val is the polarity of the pulse, HIGH or LOW (1 or 0)
+    timeout is the time to wait for a pulse to begin, in microseconds
 
 /*************************TIMING FUNCTIONS************************/
 void delay(unsigned long nTime);
-	Pause for nTime milliseconds. Supports pauses up to 5 days in length.
+    Pause for nTime milliseconds. Supports pauses up to 5 days in length.
 
 void delayMicroseconds(unsigned long nTime);
-	Pause for nTime microseconds.
+    Pause for nTime microseconds.
 
 void resetMillis(void);
-	Reset a timer that will measure elapsed time in milliseconds.
+    Reset a timer that will measure elapsed time in milliseconds.
 
 unsigned long millis(void);
-	Returns the elapsed time in milliseconds since the millisecond timer was
-	last reset. This timer can count for up to almost 25 days.
+    Returns the elapsed time in milliseconds since the millisecond timer was
+    last reset. This timer can count for up to almost 25 days.
 
 void resetMicros(void);
 unsigned long micros(void);
-	Similar to above, but time is measured in microseconds instead of
-	milliseconds. This timer can only count for 71 minutes.
+    Similar to above, but time is measured in microseconds instead of
+    milliseconds. This timer can only count for 71 minutes.
 
 /**************************UART FUNCTIONS*************************/
 Please note that this is a work in progress, and many planned features
@@ -190,91 +190,91 @@ Data is transmitted at 115200 baud, with 8 data bits and 1 stop bit.
 
 void puts(const char * str);
 void UARTputs(unsigned char UART, const char * str);
-	Prints the string str over UART0. Please note that unlike the standard
-	C implementation of puts, this DOES NOT automatically append a newline.
+    Prints the string str over UART0. Please note that unlike the standard
+    C implementation of puts, this DOES NOT automatically append a newline.
 
 char * gets(char * str, int num);
 char * UARTgets(unsigned char UART, char * str, int num);
-	Reads a string over UART until a newline is detected or the requested
-	number of characters have been read.
-	str is a pointer to a character array (C-style string) to which the
-		string is read.
-	num is the maximum number of characters to read (including the string
-		termination character '\0')
+    Reads a string over UART until a newline is detected or the requested
+    number of characters have been read.
+    str is a pointer to a character array (C-style string) to which the
+        string is read.
+    num is the maximum number of characters to read (including the string
+        termination character '\0')
 
 void putc(char c);
 void UARTputc(unsigned char UART, char c);
-	Prints the character c over UART.
+    Prints the character c over UART.
 
 void putln(void);
 void UARTputln(unsigned char UART);
-	Prints a CRLF newline over UART.
+    Prints a CRLF newline over UART.
 
 char getc(void);
 char UARTgetc(unsigned char UART);
-	Returns a character read over UART. Waits for a character if one is not
-	yet available. The character is erased from the buffer once read.
+    Returns a character read over UART. Waits for a character if one is not
+    yet available. The character is erased from the buffer once read.
 
 char peek(void);
 char UARTpeek(unsigned char UART);
-	Returns the next character from the buffer without clearing it.
-	Successive calls to peek() and peekBlocking, and the next call to getc()
-	will return the same character. Returns a character with value -1 if
-	the buffer is empty.
+    Returns the next character from the buffer without clearing it.
+    Successive calls to peek() and peekBlocking, and the next call to getc()
+    will return the same character. Returns a character with value -1 if
+    the buffer is empty.
 
 char peekBlocking(void);
 char UARTpeekBlocking(unsigned char UART);
-	Returns the next character from the buffer without clearing it.
-	Successive calls to peek() and peekBlocking, and the next call to getc()
-	will return the same character. Waits for a character if the buffer is
-	empty.
+    Returns the next character from the buffer without clearing it.
+    Successive calls to peek() and peekBlocking, and the next call to getc()
+    will return the same character. Waits for a character if the buffer is
+    empty.
 
 void puti(long i);
 void UARTputi(unsigned char UART, long i);
-	Prints the signed long integer i as a decimal.
+    Prints the signed long integer i as a decimal.
 
 long geti(void);
 long UARTgeti(unsigned char UART);
-	Gets a decimal signed long integer over UART and returns it.
+    Gets a decimal signed long integer over UART and returns it.
 
 void putu(unsigned long u, unsigned char digits);
 void UARTputu(unsigned char UART, unsigned long u, unsigned char digits);
-	Prints the unsigned long integer u as a decimal. Adds leading zeroes or
-	truncates as required to match given number of digits.
-	digits is the number of digits desired.
+    Prints the unsigned long integer u as a decimal. Adds leading zeroes or
+    truncates as required to match given number of digits.
+    digits is the number of digits desired.
 
 unsigned long getu(unsigned char digits);
 unsigned long UARTgetu(unsigned char UART, unsigned char digits);
-	Gets a decimal unsigned long integer over UART and returns it. Reads up
-	to a non numeric character or till the digit limit.
-	digits is the maximum number of digits to read.
+    Gets a decimal unsigned long integer over UART and returns it. Reads up
+    to a non numeric character or till the digit limit.
+    digits is the maximum number of digits to read.
 
 void puth(unsigned long h, unsigned char digits);
 void UARTputh(unsigned char UART, unsigned long h, unsigned char digits);
-	Prints the unsigned long integer h as a hexadecimal. Adds leading
-	zeroes or truncates as required to match given number of digits.
-	digits is the number of digits desired.
+    Prints the unsigned long integer h as a hexadecimal. Adds leading
+    zeroes or truncates as required to match given number of digits.
+    digits is the number of digits desired.
 
 unsigned long geth(unsigned char digits);
 unsigned long UARTgeth(unsigned char UART, unsigned char digits);
-	Gets a hexadecimal unsigned long integer over UART and returns it. Reads
-	up to a non numeric character or till the digit limit.
-	digits is the maximum number of digits to read.
+    Gets a hexadecimal unsigned long integer over UART and returns it. Reads
+    up to a non numeric character or till the digit limit.
+    digits is the maximum number of digits to read.
 
 /**************************SPI/SSI FUNCTIONS*************************/
 void enableSPI(unsigned short SPINum, unsigned short wordLength, unsigned long dataRate);
-	Enables the selected SPI, and configures it for a specified
-	word length in bits at a data rate specified in Hz. The pins associated
-	with the selected SPI will be configured for SPI.
-	SPINum is the number of the SPI (0 to 3)
-	wordLenth is the length of each word in bits
-	dataRate is the transmission rate in Hz
+    Enables the selected SPI, and configures it for a specified
+    word length in bits at a data rate specified in Hz. The pins associated
+    with the selected SPI will be configured for SPI.
+    SPINum is the number of the SPI (0 to 3)
+    wordLenth is the length of each word in bits
+    dataRate is the transmission rate in Hz
 
 void SPIWrite(unsigned short SPINum, unsigned long data);
-	Writes the given data to the selected SPI.
-	SPINum is the number of the SPI
-	data is the word to be transmitted
+    Writes the given data to the selected SPI.
+    SPINum is the number of the SPI
+    data is the word to be transmitted
 
 unsigned long SPIRead(unsigned short SPINum);
-	Reads a word from the selected SPI. Will wait for data if buffer empty.
-	SPINum is the number of the SPI
+    Reads a word from the selected SPI. Will wait for data if buffer empty.
+    SPINum is the number of the SPI

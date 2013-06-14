@@ -17,53 +17,53 @@ along with Stellarino.  If not, see <http://www.gnu.org/licenses/>.
 
 Version History:
 0.1		Dec 14, 2012	Initial version. Basic init() function, delay() and
-						delayMicroseconds(), basic GPIO functions, i.e.
-						pinMode(), digitalWrite(), digitalRead().
+                        delayMicroseconds(), basic GPIO functions, i.e.
+                        pinMode(), digitalWrite(), digitalRead().
 
 0.2		Dec 15, 2012	Power-saving interrupt based delay() function that
-						puts processor to sleep during a delay implemented.
-						The improved delay function allows delays up to almost
-						5 days length. Crude pulseIn() function implemented.
+                        puts processor to sleep during a delay implemented.
+                        The improved delay function allows delays up to almost
+                        5 days length. Crude pulseIn() function implemented.
 
 0.3		Dec 17, 2012	PWM output implemented with the analogWrite() function.
-						Servo signal PWM mode added, and servoWrite() function
-						created for interfacing. Much improved implementation
-						of pulseIn() created using a timer instead of empirical
-						timing.
+                        Servo signal PWM mode added, and servoWrite() function
+                        created for interfacing. Much improved implementation
+                        of pulseIn() created using a timer instead of empirical
+                        timing.
 
 0.4		Dec 18, 2012	Implemented analogRead() and analog pin configuration.
-						Added timer functions using WTIMER4 to track elapsed time.
-						Broke off pin multiplexing and other global constant arrays
-						into stellarino_pins.h for better organization. Delay
-						functions grouped with timer functions in stellarino_timer.h
-						Switched PDL commands to ROM versions to reduce binary size.
+                        Added timer functions using WTIMER4 to track elapsed time.
+                        Broke off pin multiplexing and other global constant arrays
+                        into stellarino_pins.h for better organization. Delay
+                        functions grouped with timer functions in stellarino_timer.h
+                        Switched PDL commands to ROM versions to reduce binary size.
 
 0.5		Dec 19, 2012	Implemented basic FOSS UART library to eliminate dependence
-						on incompatibly licensed UARTstdio library. Renamed timer
-						functions to millis() and micros() to better match Wiring.
-						Modified timer functions to count one unit of time per timer
-						tick instead of one per ten ticks. This increased the range
-						of the timers ten-fold. Timers are now started automatically
-						upon init() to better match Wiring, but the ability to reset
-						the timers has been maintained. Fixed delayMicroseconds().
-						Added example using the setup() and loop() structure of Wiring
-						sketches.
+                        on incompatibly licensed UARTstdio library. Renamed timer
+                        functions to millis() and micros() to better match Wiring.
+                        Modified timer functions to count one unit of time per timer
+                        tick instead of one per ten ticks. This increased the range
+                        of the timers ten-fold. Timers are now started automatically
+                        upon init() to better match Wiring, but the ability to reset
+                        the timers has been maintained. Fixed delayMicroseconds().
+                        Added example using the setup() and loop() structure of Wiring
+                        sketches.
 
 0.6		Dec 20, 2012	Increased clock speed to 80 MHz and adjusted timer setup
-						appropriately. Added UART functions for unsigned decimal and
-						hexadecimal input and output.
+                        appropriately. Added UART functions for unsigned decimal and
+                        hexadecimal input and output.
 
 0.7		Dec 26, 2012	Added SPI (master) support. Increased stack size to 512 bytes
-						to permit more complex programs and the safe use of printf and
-						similarly complex functions. Add MCP4921 DAC demo using SPI.
-						Set up release compile configuration. Added code to prevent
-						bricking through accidentally reconfiguring the JTAG pins.
+                        to permit more complex programs and the safe use of printf and
+                        similarly complex functions. Add MCP4921 DAC demo using SPI.
+                        Set up release compile configuration. Added code to prevent
+                        bricking through accidentally reconfiguring the JTAG pins.
 
 0.8		Jan 1, 2013		Fixed 0 duty cycle PWM. Added instructions to README for
-						building driverlib-cm4f. Added post-build step to create a
-						flashable .bin file. Added vector table to permit code to run
-						automatically after a reset.
-						
+                        building driverlib-cm4f. Added post-build step to create a
+                        flashable .bin file. Added vector table to permit code to run
+                        automatically after a reset.
+                        
 0.9		Apr 7, 2013		Fixed millis() timer. Further increased stack size to 1024
-						bytes as there is no shortage of RAM on this MCU. Added new
-						UART functions for using UART ports other than UART0.
+                        bytes as there is no shortage of RAM on this MCU. Added new
+                        UART functions for using UART ports other than UART0.
