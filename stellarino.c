@@ -98,7 +98,7 @@ void pinMode(unsigned char pin, unsigned char mode) {
         ROM_TimerLoadSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 65279);		// Timer will load this value on timeout
         ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 65278);	// Initial duty cycle of 0
         ROM_TimerControlLevel(TIMER[pinMux[pin][0]], pinMux[pin][1], 0);
-        ROM_TimerEnable(TIMER[pinMux[pin][0]], pinMux[pin][1]);
+        ROM_TimerEnable(TIMER[pinMux[pin][0]], TIMER_BOTH);
         break;
     case OUTPUT_SERVO:
         // A pin connected to a wide timer is required for servo output

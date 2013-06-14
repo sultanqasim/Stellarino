@@ -19,7 +19,7 @@
 
 #include "stellarino.h"
 
-long r = 0;
+short r = 0, g = 85, b = 171, dr = 1, dg = 1, db = 1;
 
 void setup();
 void loop();
@@ -30,37 +30,34 @@ int main(void) {
     while(1) loop();
 }
 
-// LED Blink Demo
+// 2-Speed LED Colour Fade Demo
 void setup() {
     pinMode(RED_LED, OUTPUT_PWM);
+    pinMode(GREEN_LED, OUTPUT_PWM);
     pinMode(BLUE_LED, OUTPUT_PWM);
+    pinMode(SW1, INPUT_PULLUP);
 }
 
 void loop() {
-    analogWrite(RED_LED, r % 256);
-    analogWrite(BLUE_LED, (r + 128) % 256);
-    r += 1;
-    delay(25);
-}
+    analogWrite(RED_LED, r);
+    analogWrite(GREEN_LED, g);
+    analogWrite(BLUE_LED, b / 2);
 
-/* 2-Speed LED Fade Example
-#include "stellarino.h"
+    if (r >= 255) dr = -1;
+    else if (r <= 0) dr = 1;
+    r += dr;
 
-int main(void) {
-    init();
-    pinMode(SW1, INPUT_PULLUP);
-    pinMode(GREEN_LED, OUTPUT_PWM);
-    int a = 0, dir = 1;
-    while(1) {
-        if (a == 255) dir = -1;
-        else if (a == 0) dir = 1;
-        analogWrite(GREEN_LED, a);
-        a += dir;
-        if (digitalRead(SW1)) delay(2);
-        else delayMicroseconds(500);
-    }
+    if (g >= 255) dg = -1;
+    else if (g <= 0) dg = 1;
+    g += dg;
+
+    if (b >= 255) db = -1;
+    else if (b <= 0) db = 1;
+    b += db;
+
+    if (digitalRead(SW1)) delay(5);
+    else delayMicroseconds(1000);
 }
-*/
 
 /*
 // UART Adder Demo Code
