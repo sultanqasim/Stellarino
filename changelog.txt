@@ -73,4 +73,4 @@ Version History:
                         program. Reduced PWM frequency to 500 Hz. The PWM frequency
                         is customizable via a macro in stellarino.h. Added servo
                         support to all PWM-capable pins. Added enableUART function
-						to simplify the configuration of UARTs.
+                        to simplify the configuration of UARTs.
