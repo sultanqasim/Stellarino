@@ -21,11 +21,24 @@
 
 char peekedChar[8], peeked[8] = {0};
 
-unsigned long power(unsigned long base, int exp) {
+static unsigned long power(unsigned long base, int exp) {
     int res = 1;
     int i;
     for (i = 0; i < exp; i++) res *= base;
     return res;
+}
+
+void enableUART(unsigned char UART, unsigned long baudRate) {
+    ROM_SysCtlPeripheralEnable(SysCtlGPIOs[UARTPins[UART][0]/8]);
+    ROM_SysCtlPeripheralSleepEnable(SysCtlGPIOs[UARTPins[UART][0]/8]);
+    ROM_SysCtlPeripheralEnable(SysCtlUARTs[UART]);
+    ROM_GPIOPinConfigure(UARTPins[UART][2]);
+    ROM_GPIOPinConfigure(UARTPins[UART][3]);
+    ROM_GPIOPinTypeUART(GPIO[UARTPins[UART][0]/8],
+            bit8[UARTPins[UART][0] % 8] | bit8[UARTPins[UART][1] % 8]);
+    ROM_UARTConfigSetExpClk(UART0_BASE, ROM_SysCtlClockGet(), baudRate, (UART_CONFIG_WLEN_8 |
+            UART_CONFIG_STOP_ONE | UART_CONFIG_PAR_NONE));
+    ROM_UARTEnable(UARTBASE[UART]);
 }
 
 void puts(const char * str) {

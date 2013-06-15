@@ -22,8 +22,7 @@
 
 #include "stellarino.h"
 
-// Non-standard function for positive integer powers
-unsigned long power(unsigned long base, int exp);
+void enableUART(unsigned char UART, unsigned long baudRate);
 
 void puts(const char * str);	// Will not append newline automatically
 void UARTputs(unsigned char UART, const char * str);

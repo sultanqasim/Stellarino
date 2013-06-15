@@ -56,6 +56,12 @@ const unsigned long SysCtlTimers[] = {
         SYSCTL_PERIPH_WTIMER3, SYSCTL_PERIPH_WTIMER4, SYSCTL_PERIPH_WTIMER5
 };
 
+const unsigned long SysCtlUARTs[] = {
+        SYSCTL_PERIPH_UART0, SYSCTL_PERIPH_UART1, SYSCTL_PERIPH_UART2,
+        SYSCTL_PERIPH_UART3, SYSCTL_PERIPH_UART4, SYSCTL_PERIPH_UART5,
+        SYSCTL_PERIPH_UART6, SYSCTL_PERIPH_UART7
+};
+
 // Pins associated w/ WTIMER5 will not be used for PWM
 // Timers 0-5 are TIMER0-TIMER5 and 6-11 are WTIMER0-WTIMER5
 // Timer 12 means it is not a timer pin, ADC Channel 12 means not an ADC pin
@@ -111,3 +117,14 @@ const unsigned long pinMux[][4] = {
         {12, 0, 0, 12}		// PF7
 };
 
+// RX Pin, TX Pin, RX Pin Config, TX Pin Config
+const unsigned long UARTPins[][4] = {
+        {PA0, PA1, GPIO_PA0_U0RX, GPIO_PA1_U0TX},
+        {PB0, PB1, GPIO_PB0_U1RX, GPIO_PB1_U1TX},
+        {PD6, PD7, GPIO_PD6_U2RX, GPIO_PD7_U2TX},
+        {PC6, PC7, GPIO_PC6_U3RX, GPIO_PC7_U3TX},
+        {PC4, PC5, GPIO_PC4_U4RX, GPIO_PC5_U4TX},
+        {PE4, PE5, GPIO_PE4_U5RX, GPIO_PE5_U5TX},
+        {PD4, PD5, GPIO_PD4_U6RX, GPIO_PD5_U6TX},
+        {PE0, PE1, GPIO_PE0_U7RX, GPIO_PE1_U7TX}
+};

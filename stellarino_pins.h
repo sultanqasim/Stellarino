@@ -32,6 +32,8 @@ extern const unsigned long UARTBASE[8];
 extern const unsigned long pinMux[48][4];
 extern const unsigned long SysCtlGPIOs[6];
 extern const unsigned long SysCtlTimers[12];
+extern const unsigned long SysCtlUARTs[8];
+extern const unsigned long UARTPins[8][4];
 
 #define PA0 0
 #define PA1 1
