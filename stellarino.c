@@ -19,6 +19,8 @@
 
 #include "stellarino.h"
 
+static const long pwmPeriod = 80000000 / PWMFREQ;
+
 void init(void) {
     // Set system clock to 80 MHz
     ROM_SysCtlClockSet(SYSCTL_SYSDIV_2_5|SYSCTL_USE_PLL|SYSCTL_XTAL_16MHZ|SYSCTL_OSC_MAIN);
@@ -70,22 +72,27 @@ void pinMode(unsigned char pin, unsigned char mode) {
         ROM_GPIOPinTypeGPIOInput(GPIO[pin/8], bit8[pin%8]);
         ROM_GPIOPadConfigSet(GPIO[pin/8], bit8[pin%8], GPIO_STRENGTH_8MA, GPIO_PIN_TYPE_STD);
         break;
+
     case OUTPUT:
         ROM_GPIOPinTypeGPIOOutput(GPIO[pin/8], bit8[pin%8]);
         ROM_GPIOPadConfigSet(GPIO[pin/8], bit8[pin%8], GPIO_STRENGTH_8MA, GPIO_PIN_TYPE_STD);
         break;
+
     case INPUT_PULLUP:
         ROM_GPIOPinTypeGPIOInput(GPIO[pin/8], bit8[pin%8]);
         ROM_GPIOPadConfigSet(GPIO[pin/8], bit8[pin%8], GPIO_STRENGTH_8MA, GPIO_PIN_TYPE_STD_WPU);
         break;
+
     case INPUT_PULLDOWN:
         ROM_GPIOPinTypeGPIOInput(GPIO[pin/8], bit8[pin%8]);
         ROM_GPIOPadConfigSet(GPIO[pin/8], bit8[pin%8], GPIO_STRENGTH_8MA, GPIO_PIN_TYPE_STD_WPD);
         break;
+
     case INPUT_ANALOG:
         ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_ADC0);
         ROM_GPIOPinTypeADC(GPIO[pin/8], bit8[pin%8]);
         break;
+
     case OUTPUT_PWM:
         if (pinMux[pin][0] == 12) break;
         ROM_SysCtlPeripheralEnable(SysCtlTimers[pinMux[pin][0]]);
@@ -94,25 +101,52 @@ void pinMode(unsigned char pin, unsigned char mode) {
         ROM_GPIOPinTypeTimer(GPIO[pin/8], bit8[pin%8]);
         ROM_GPIOPinConfigure(pinMux[pin][2]);
         ROM_TimerConfigure(TIMER[pinMux[pin][0]], (TIMER_CFG_SPLIT_PAIR | TIMER_CFG_A_PWM | TIMER_CFG_B_PWM));
-        ROM_TimerPrescaleSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 0);		// ~1230 Hz PWM
-        ROM_TimerLoadSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 65279);		// Timer will load this value on timeout
-        ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 65278);	// Initial duty cycle of 0
+
+        // The narrow timers may need to use a prescaler to get the desired PWM period
+        if (pinMux[pin][0] < 6)
+            ROM_TimerPrescaleSet(TIMER[pinMux[pin][0]], pinMux[pin][1], (pwmPeriod & 0xFFFF0000) >> 16);
+        else ROM_TimerPrescaleSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 0);
+
+        // Timer will load this value on timeout
+        ROM_TimerLoadSet(TIMER[pinMux[pin][0]], pinMux[pin][1], pwmPeriod);
+
+        // Initial duty cycle of 0
+        ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], pwmPeriod - 1);
+        if (pinMux[pin][0] < 6)
+            ROM_TimerPrescaleMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1],
+                    (pwmPeriod & 0xFFFF0000) >> 16);
+        else ROM_TimerPrescaleMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 0);
+
         ROM_TimerControlLevel(TIMER[pinMux[pin][0]], pinMux[pin][1], 0);
         ROM_TimerEnable(TIMER[pinMux[pin][0]], TIMER_BOTH);
         break;
+
     case OUTPUT_SERVO:
-        // A pin connected to a wide timer is required for servo output
-        if (pinMux[pin][0] == 12 || pinMux[pin][0] < 6) break;
+        if (pinMux[pin][0] == 12) break;
         ROM_SysCtlPeripheralEnable(SysCtlTimers[pinMux[pin][0]]);
         ROM_SysCtlPeripheralSleepEnable(SysCtlTimers[pinMux[pin][0]]);
+        ROM_GPIOPadConfigSet(GPIO[pin/8], bit8[pin%8], GPIO_STRENGTH_8MA, GPIO_PIN_TYPE_STD);
         ROM_GPIOPinTypeTimer(GPIO[pin/8], bit8[pin%8]);
         ROM_GPIOPinConfigure(pinMux[pin][2]);
         ROM_TimerConfigure(TIMER[pinMux[pin][0]], (TIMER_CFG_SPLIT_PAIR | TIMER_CFG_A_PWM | TIMER_CFG_B_PWM));
-        ROM_TimerPrescaleSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 0);
-        ROM_TimerLoadSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 1600000);	// Timer will load this value on timeout
-        ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 1480000);	// Sets 1500 us initial pulse length
+
+        // The narrow timers may need to use a prescaler to get the desired PWM period
+        if (pinMux[pin][0] < 6)
+            ROM_TimerPrescaleSet(TIMER[pinMux[pin][0]], pinMux[pin][1], (1600000 & 0xFFFF0000) >> 16);
+        else ROM_TimerPrescaleSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 0);
+
+        // Timer will load this value on timeout
+        ROM_TimerLoadSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 1600000);
+
+        // Initial duty cycle of 1500 us
+        ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 1480000);
+        if (pinMux[pin][0] < 6)
+            ROM_TimerPrescaleMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1],
+                    (1480000 & 0xFFFF0000) >> 16);
+        else ROM_TimerPrescaleMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 0);
+
         ROM_TimerControlLevel(TIMER[pinMux[pin][0]], pinMux[pin][1], 0);
-        ROM_TimerEnable(TIMER[pinMux[pin][0]], pinMux[pin][1]);
+        ROM_TimerEnable(TIMER[pinMux[pin][0]], TIMER_BOTH);
         break;
     }
 }
@@ -143,15 +177,27 @@ void digitalWrite(unsigned char pin, short val) {
 }
 
 void analogWrite(unsigned char pin, short val) {
-    if (val > 255) val = 255;
-    if (val == 0) ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 65278);
-    else ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 65280 - (256 * val));
+    long period;	// Period the output is low
+
+    if (val > 255) period = 0;
+    else if (val <= 0) period = pwmPeriod - 1;
+    else period = (pwmPeriod * (255-val)) >> 8;
+
+    if (pinMux[pin][0] < 6)	// Narrow timers may need a prescaler
+        ROM_TimerPrescaleMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], (period & 0xFFFF0000) >> 16);
+    ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], period);
 }
 
 void servoWrite(unsigned char pin, short val) {
+    long period;
+
     if (val < 600) val = 600;
     else if (val > 2400) val = 2400;
-    ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 1600000 - (80 * val));
+    period = 1600000 - (80 * val);
+
+    if (pinMux[pin][0] < 6)	// Narrow timers need a prescaler
+        ROM_TimerPrescaleMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], (period & 0xFFFF0000) >> 16);
+    ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], period);
 }
 
 unsigned long pulseIn(unsigned char pin, short val, unsigned long timeout) {

@@ -72,14 +72,14 @@ PC0		GPIO, PWM
 PC1		GPIO, PWM
 PC2		GPIO, PWM
 PC3		GPIO, PWM
-PC4		GPIO, PWM, Servo
-PC5		GPIO, PWM, Servo
-PC6		GPIO, PWM, Servo
-PC7		GPIO, PWM, Servo
-PD0		GPIO, PWM, Servo, ADC, SSI3 SCK
-PD1		GPIO, PWM, Servo, ADC, SSI3 SS
-PD2		GPIO, PWM, Servo, ADC, SSI3 MISO
-PD3		GPIO, PWM, Servo, ADC, SSI3 MOSI
+PC4		GPIO, PWM,
+PC5		GPIO, PWM
+PC6		GPIO, PWM
+PC7		GPIO, PWM
+PD0		GPIO, PWM, ADC, SSI3 SCK
+PD1		GPIO, PWM, ADC, SSI3 SS
+PD2		GPIO, PWM, ADC, SSI3 MISO
+PD3		GPIO, PWM, ADC, SSI3 MOSI
 PD4		GPIO
 PD5		GPIO
 PD6		GPIO
@@ -119,7 +119,7 @@ void pinMode(unsigned char pin, unsigned char mode);
         INPUT_PULLUP
         INPUT_PULLDOWN
         INPUT_ANALOG
-        OUTPUT_PWM		// Approxiamtely 769 Hz PWM
+        OUTPUT_PWM		// 500 Hz PWM, customizable via stellarino.h
         OUTPUT_SERVO	// Standard servo pulses every 20 ms
 
 int digitalRead(unsigned char pin);

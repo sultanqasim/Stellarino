@@ -52,6 +52,8 @@
 #define HIGH 1
 #define LOW 0
 
+#define PWMFREQ 500	// PWM Frequency in Hz, when using analogWrite
+
 void init(void);	// Must be called in main(), enables everything
 
 void pinMode(unsigned char pin, unsigned char mode);

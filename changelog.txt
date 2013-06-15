@@ -67,3 +67,9 @@ Version History:
 0.9		Apr 7, 2013		Fixed millis() timer. Further increased stack size to 1024
                         bytes as there is no shortage of RAM on this MCU. Added new
                         UART functions for using UART ports other than UART0.
+
+1.0     Jun 14, 2013    Fixed multiple PWM outputs from one timer. Created new two
+                        speed LED colour fade example as the new default sample
+                        program. Reduced PWM frequency to 500 Hz. The PWM frequency
+                        is customizable via a macro in stellarino.h. Added servo
+                        support to all PWM-capable pins.
