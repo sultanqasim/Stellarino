@@ -14,6 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Stellarino.  If not, see <http://www.gnu.org/licenses/>.
 
+
 /*************************ABOUT STELLARINO*************************/
 Stellarino is a simple Wiring-like but incompatible interface library
 implemented in C for the TI Stellaris LM4F120H5QR used in the
@@ -30,6 +31,7 @@ It thus requires StellarisWare and a suitable IDE, such as TI Code Composer
 Studio in order to function. Since Stellarino implements all basic
 functionality using the StellarisWare PDL with simple, easy to understand
 code, it also makes a good introductory example for use of the PDL.
+
 
 /**********************HOW TO BUILD STELLARINO**********************/
 In order to build Stellarino, you must first build the StrellarisWare
@@ -49,6 +51,7 @@ If you have not already done that, first do as follows:
 
 Once driverlib-cm4f has been built within one's CCS workspace, one may
 proceed to import and build Stellarino.
+
 
 /*************************PIN MULTIPLEXING*************************/
 Pin		Possible Use(s) in Stellarino
@@ -101,10 +104,12 @@ PF5		GPIO
 PF6		GPIO
 PF7		GPIO
 
+
 /************************GENERAL FUNCTIONS************************/
 void init(void);
-This function must be called at the beginning of main() in any program
-to configure the microcontroller to function with Stellarino.
+    This function must be called at the beginning of main() in any program
+    to configure the microcontroller to function with Stellarino.
+
 
 /*********************INPUT AND OUTPUT FUNCTIONS********************/
 NOTE: 	FOR ALL IO FUNCTIONS, PIN SHOULD BE SPECIFIED IN THE FORM PX#.
@@ -156,6 +161,7 @@ unsigned long pulseIn(unsigned char pin, short val, unsigned long timeout);
     val is the polarity of the pulse, HIGH or LOW (1 or 0)
     timeout is the time to wait for a pulse to begin, in microseconds
 
+
 /*************************TIMING FUNCTIONS************************/
 void delay(unsigned long nTime);
     Pause for nTime milliseconds. Supports pauses up to 5 days in length.
@@ -175,11 +181,8 @@ unsigned long micros(void);
     Similar to above, but time is measured in microseconds instead of
     milliseconds. This timer can only count for 71 minutes.
 
-/**************************UART FUNCTIONS*************************/
-Please note that this is a work in progress, and many planned features
-have not yet been implemented. The functions listed below heve been
-implemented.
 
+/**************************UART FUNCTIONS*************************/
 Functions without the UART prefix use UART0, which is connected to the ICDI
 on the Launchpad. UART-prefixed functions can use any UART interface, from
 UART0 all the way to UART7. Just specify the appropriate UART number as an
@@ -267,6 +270,7 @@ unsigned long UARTgeth(unsigned char UART, unsigned char digits);
     Gets a hexadecimal unsigned long integer over UART and returns it. Reads
     up to a non numeric character or till the digit limit.
     digits is the maximum number of digits to read.
+
 
 /**************************SPI/SSI FUNCTIONS*************************/
 void enableSPI(unsigned short SPINum, unsigned short wordLength, unsigned long dataRate);
