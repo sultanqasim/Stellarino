@@ -41,7 +41,7 @@ void setup() {
 void loop() {
     analogWrite(RED_LED, r);
     analogWrite(GREEN_LED, g);
-    analogWrite(BLUE_LED, b / 2);
+    analogWrite(BLUE_LED, b);
 
     if (r >= 255) dr = -1;
     else if (r <= 0) dr = 1;
