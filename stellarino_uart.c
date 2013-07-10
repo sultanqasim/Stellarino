@@ -29,6 +29,12 @@ static unsigned long power(unsigned long base, int exp) {
 }
 
 void enableUART(unsigned char UART, unsigned long baudRate) {
+	// We must unlock PD7 to use UART2
+	if (UART == 2) {
+		HWREG(GPIO_PORTD_LOCK_R) = GPIO_LOCK_KEY;
+		HWREG(GPIO_PORTD_CR_R) = 0x80;
+	}
+
     ROM_SysCtlPeripheralEnable(SysCtlGPIOs[UARTPins[UART][0]/8]);
     ROM_SysCtlPeripheralSleepEnable(SysCtlGPIOs[UARTPins[UART][0]/8]);
     ROM_SysCtlPeripheralEnable(SysCtlUARTs[UART]);
@@ -36,7 +42,7 @@ void enableUART(unsigned char UART, unsigned long baudRate) {
     ROM_GPIOPinConfigure(UARTPins[UART][3]);
     ROM_GPIOPinTypeUART(GPIO[UARTPins[UART][0]/8],
             bit8[UARTPins[UART][0] % 8] | bit8[UARTPins[UART][1] % 8]);
-    ROM_UARTConfigSetExpClk(UART0_BASE, ROM_SysCtlClockGet(), baudRate, (UART_CONFIG_WLEN_8 |
+    ROM_UARTConfigSetExpClk(UARTBASE[UART], ROM_SysCtlClockGet(), baudRate, (UART_CONFIG_WLEN_8 |
             UART_CONFIG_STOP_ONE | UART_CONFIG_PAR_NONE));
     ROM_UARTEnable(UARTBASE[UART]);
 }
@@ -100,7 +106,7 @@ char getc(void) {
         peeked[0] = 0;
         return peekedChar[0];
     }
-    while (!ROM_UARTCharsAvail(UART0_BASE));	// Wait for a char if buffer empty
+
     return ROM_UARTCharGet(UART0_BASE);
 }
 
@@ -109,7 +115,7 @@ char UARTgetc(unsigned char UART) {
         peeked[UART] = 0;
         return peekedChar[UART];
     }
-    while (!ROM_UARTCharsAvail(UARTBASE[UART]));	// Wait for a char if buffer empty
+
     return ROM_UARTCharGet(UARTBASE[UART]);
 }
 
@@ -194,7 +200,7 @@ long UARTgeti(unsigned char UART) {
 
     // Read in digits
     for (a = 0; a < 10; a++) {
-        digs[a] = getc();
+        digs[a] = UARTgetc(UART);
         if (digs[a] == '-') {
             neg ^= 1;
             a--;	// No digit was read
@@ -258,7 +264,7 @@ unsigned long UARTgetu(unsigned char UART, unsigned char digits) {
 
     // Read in digits
     for (a = 0; a < digits; a++) {
-        digs[a] = getc();
+        digs[a] = UARTgetc(UART);
         if (digs[a] < 48 || digs[a] > 57) break;
     }
 
@@ -319,7 +325,7 @@ unsigned long UARTgeth(unsigned char UART, unsigned char digits) {
 
     // Read in digits
     for (a = 0; a < digits; a++) {
-        digs[a] = getc();
+        digs[a] = UARTgetc(UART);
         if (! ((digs[a] > 47 && digs[a] < 58) ||
                 (digs[a] > 64 && digs[a] < 71)) ) break;
     }

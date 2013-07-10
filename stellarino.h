@@ -22,6 +22,7 @@
 
 #define PART_LM4F120H5QR
 #define TARGET_IS_BLIZZARD_RA1
+#include "inc/lm4f120h5qr.h"
 #include "inc/hw_types.h"
 #include "inc/hw_memmap.h"
 #include "driverlib/rom.h"
