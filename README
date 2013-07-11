@@ -193,18 +193,18 @@ Data on the ICDI UART is transmitted at 115200 baud by default, with 8 data
 bits and 1 stop bit. The baud rate can be changed through a call to the
 enableUART function.
 
-void enableUART(unsigned char UART, unsigned long baudRate);
+void enableUART(uint8_t UART, unsigned long baudRate);
     Enables the given UART, and configures it to run at the given baud rate.
     Any arbitrary baud rate may be used, however for reliable communication,
     baud rates of 1200000 or below are recommended.
 
 void puts(const char * str);
-void UARTputs(unsigned char UART, const char * str);
-    Prints the string str over UART0. Please note that unlike the standard
+void UARTputs(uint8_t UART, const char * str);
+    Outputs the string str over UART. Please note that unlike the standard
     C implementation of puts, this DOES NOT automatically append a newline.
 
 char * gets(char * str, int num);
-char * UARTgets(unsigned char UART, char * str, int num);
+char * UARTgets(uint8_t UART, char * str, int num);
     Reads a string over UART until a newline is detected or the requested
     number of characters have been read.
     str is a pointer to a character array (C-style string) to which the
@@ -213,63 +213,74 @@ char * UARTgets(unsigned char UART, char * str, int num);
         termination character '\0')
 
 void putc(char c);
-void UARTputc(unsigned char UART, char c);
-    Prints the character c over UART.
+void UARTputc(uint8_t UART, char c);
+    Outputs the character c over UART.
 
 void putln(void);
-void UARTputln(unsigned char UART);
-    Prints a CRLF newline over UART.
+void UARTputln(uint8_t UART);
+    Outputs a CRLF newline over UART.
 
 char getc(void);
-char UARTgetc(unsigned char UART);
+char UARTgetc(uint8_t UART);
     Returns a character read over UART. Waits for a character if one is not
     yet available. The character is erased from the buffer once read.
 
 char peek(void);
-char UARTpeek(unsigned char UART);
+char UARTpeek(uint8_t UART);
     Returns the next character from the buffer without clearing it.
     Successive calls to peek() and peekBlocking, and the next call to getc()
     will return the same character. Returns a character with value -1 if
     the buffer is empty.
 
 char peekBlocking(void);
-char UARTpeekBlocking(unsigned char UART);
+char UARTpeekBlocking(uint8_t UART);
     Returns the next character from the buffer without clearing it.
     Successive calls to peek() and peekBlocking, and the next call to getc()
     will return the same character. Waits for a character if the buffer is
     empty.
 
 void puti(long i);
-void UARTputi(unsigned char UART, long i);
-    Prints the signed long integer i as a decimal.
+void UARTputi(uint8_t UART, long i);
+    Outputs the signed long integer i as a decimal.
 
 long geti(void);
-long UARTgeti(unsigned char UART);
+long UARTgeti(uint8_t UART);
     Gets a decimal signed long integer over UART and returns it.
 
-void putu(unsigned long u, unsigned char digits);
-void UARTputu(unsigned char UART, unsigned long u, unsigned char digits);
-    Prints the unsigned long integer u as a decimal. Adds leading zeroes or
-    truncates as required to match given number of digits.
+void putu(unsigned long u, uint8_t digits);
+void UARTputu(uint8_t UART, unsigned long u, uint8_t digits);
+    Outputs the unsigned long integer u as a decimal. Adds leading zeroes
+    or truncates as required to match given number of digits.
     digits is the number of digits desired.
 
-unsigned long getu(unsigned char digits);
-unsigned long UARTgetu(unsigned char UART, unsigned char digits);
+unsigned long getu(uint8_t digits);
+unsigned long UARTgetu(uint8_t UART, uint8_t digits);
     Gets a decimal unsigned long integer over UART and returns it. Reads up
     to a non numeric character or till the digit limit.
     digits is the maximum number of digits to read.
 
-void puth(unsigned long h, unsigned char digits);
-void UARTputh(unsigned char UART, unsigned long h, unsigned char digits);
-    Prints the unsigned long integer h as a hexadecimal. Adds leading
+void puth(unsigned long h, uint8_t digits);
+void UARTputh(uint8_t UART, unsigned long h, uint8_t digits);
+    Outputs the unsigned long integer h as a hexadecimal. Adds leading
     zeroes or truncates as required to match given number of digits.
     digits is the number of digits desired.
 
-unsigned long geth(unsigned char digits);
-unsigned long UARTgeth(unsigned char UART, unsigned char digits);
-    Gets a hexadecimal unsigned long integer over UART and returns it. Reads
-    up to a non numeric character or till the digit limit.
+unsigned long geth(uint8_t digits);
+unsigned long UARTgeth(uint8_t UART, uint8_t digits);
+    Gets a hexadecimal unsigned long integer over UART and returns it.
+    Reads up to a non numeric character or till the digit limit.
     digits is the maximum number of digits to read.
+
+void putf(float f, uint8_t decimal);
+void UARTputf(uint8_t UART, float f, uint8_t decimal);
+    Outputs the floating point number f to the given number of decimal
+    places over UART.
+    decimal is the number of decimal places to output.
+
+float getf();
+float UARTgetf(uint8_t UART);
+    Gets a floating point number over UART and returns it. This function
+    does not accept numbers in scientific notation.
 
 
 /**************************SPI/SSI FUNCTIONS*************************/

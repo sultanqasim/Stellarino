@@ -74,3 +74,8 @@ Version History:
                         is customizable via a macro in stellarino.h. Added servo
                         support to all PWM-capable pins. Added enableUART function
                         to simplify the configuration of UARTs.
+
+1.1     Jul 10, 2013    Fixed geti/getu/geth functions for UART1 and up. Added pin
+                        lock code to unlock PD7 for use as UART2. Created new UART
+                        functions for floating point input and output. Added map()
+                        macro for linearly mapping a number from one range to another.

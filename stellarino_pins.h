@@ -22,18 +22,18 @@
 
 #include "stellarino.h"
 
-extern const unsigned char bit8[8];
-extern const unsigned short bit16[16];
-extern const unsigned long bit32[32];
+extern const uint8_t bit8[8];
+extern const uint16_t bit16[16];
+extern const uint32_t bit32[32];
 
-extern const unsigned long GPIO[6];
-extern const unsigned long TIMER[12];
-extern const unsigned long UARTBASE[8];
-extern const unsigned long pinMux[48][4];
-extern const unsigned long SysCtlGPIOs[6];
-extern const unsigned long SysCtlTimers[12];
-extern const unsigned long SysCtlUARTs[8];
-extern const unsigned long UARTPins[8][4];
+extern const uint32_t GPIO[6];
+extern const uint32_t TIMER[12];
+extern const uint32_t UARTBASE[8];
+extern const uint32_t pinMux[48][4];
+extern const uint32_t SysCtlGPIOs[6];
+extern const uint32_t SysCtlTimers[12];
+extern const uint32_t SysCtlUARTs[8];
+extern const uint32_t UARTPins[8][4];
 
 #define PA0 0
 #define PA1 1

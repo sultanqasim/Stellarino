@@ -19,44 +19,44 @@
 
 #include "stellarino_pins.h"
 
-const unsigned char bit8[] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80};
+const uint8_t bit8[] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80};
 
-const unsigned short bit16[] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40,
-                               0x80, 0x100, 0x200, 0x400, 0x800, 0x1000,
-                               0x2000, 0x4000, 0x8000};
+const uint16_t bit16[] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40,
+                          0x80, 0x100, 0x200, 0x400, 0x800, 0x1000,
+                          0x2000, 0x4000, 0x8000};
 
-const unsigned long bit32[] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40,
+const uint32_t bit32[] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40,
                                0x80, 0x100, 0x200, 0x400, 0x800, 0x1000,
                                0x2000, 0x4000, 0x8000, 0x10000, 0x20000,
                                0x40000, 0x80000, 0x100000, 0x200000,
                                0x400000, 0x800000, 0x1000000, 0x2000000,
                                0x4000000, 0x8000000};
 
-const unsigned long GPIO[] = {GPIO_PORTA_BASE, GPIO_PORTB_BASE, GPIO_PORTC_BASE,
-                              GPIO_PORTD_BASE, GPIO_PORTE_BASE, GPIO_PORTF_BASE};
+const uint32_t GPIO[] = {GPIO_PORTA_BASE, GPIO_PORTB_BASE, GPIO_PORTC_BASE,
+                         GPIO_PORTD_BASE, GPIO_PORTE_BASE, GPIO_PORTF_BASE};
 
-const unsigned long TIMER[] = {TIMER0_BASE, TIMER1_BASE, TIMER2_BASE,
-                               TIMER3_BASE, TIMER4_BASE, TIMER5_BASE,
-                               WTIMER0_BASE, WTIMER1_BASE, WTIMER2_BASE,
-                               WTIMER3_BASE, WTIMER4_BASE, WTIMER5_BASE};
+const uint32_t TIMER[] = {TIMER0_BASE, TIMER1_BASE, TIMER2_BASE,
+                          TIMER3_BASE, TIMER4_BASE, TIMER5_BASE,
+                          WTIMER0_BASE, WTIMER1_BASE, WTIMER2_BASE,
+                          WTIMER3_BASE, WTIMER4_BASE, WTIMER5_BASE};
 
-const unsigned long UARTBASE[] = {UART0_BASE, UART1_BASE, UART2_BASE,
-                                  UART3_BASE, UART4_BASE, UART5_BASE,
-                                  UART6_BASE, UART7_BASE};
+const uint32_t UARTBASE[] = {UART0_BASE, UART1_BASE, UART2_BASE,
+                             UART3_BASE, UART4_BASE, UART5_BASE,
+                             UART6_BASE, UART7_BASE};
 
-const unsigned long SysCtlGPIOs[] = {
+const uint32_t SysCtlGPIOs[] = {
         SYSCTL_PERIPH_GPIOA, SYSCTL_PERIPH_GPIOB, SYSCTL_PERIPH_GPIOC,
         SYSCTL_PERIPH_GPIOD, SYSCTL_PERIPH_GPIOE, SYSCTL_PERIPH_GPIOF
 };
 
-const unsigned long SysCtlTimers[] = {
+const uint32_t SysCtlTimers[] = {
         SYSCTL_PERIPH_TIMER0, SYSCTL_PERIPH_TIMER1, SYSCTL_PERIPH_TIMER2,
         SYSCTL_PERIPH_TIMER3, SYSCTL_PERIPH_TIMER4, SYSCTL_PERIPH_TIMER5,
         SYSCTL_PERIPH_WTIMER0, SYSCTL_PERIPH_WTIMER1, SYSCTL_PERIPH_WTIMER2,
         SYSCTL_PERIPH_WTIMER3, SYSCTL_PERIPH_WTIMER4, SYSCTL_PERIPH_WTIMER5
 };
 
-const unsigned long SysCtlUARTs[] = {
+const uint32_t SysCtlUARTs[] = {
         SYSCTL_PERIPH_UART0, SYSCTL_PERIPH_UART1, SYSCTL_PERIPH_UART2,
         SYSCTL_PERIPH_UART3, SYSCTL_PERIPH_UART4, SYSCTL_PERIPH_UART5,
         SYSCTL_PERIPH_UART6, SYSCTL_PERIPH_UART7
@@ -66,7 +66,7 @@ const unsigned long SysCtlUARTs[] = {
 // Timers 0-5 are TIMER0-TIMER5 and 6-11 are WTIMER0-WTIMER5
 // Timer 12 means it is not a timer pin, ADC Channel 12 means not an ADC pin
 // Format: {Timer #, half-timer, Timer GPIO pin-mux, ADC Channel}
-const unsigned long pinMux[][4] = {
+const uint32_t pinMux[][4] = {
         {12, 0, 0, 12},		// PA0
         {12, 0, 0, 12},		// PA1
         {12, 0, 0, 12},		// PA2
@@ -118,7 +118,7 @@ const unsigned long pinMux[][4] = {
 };
 
 // RX Pin, TX Pin, RX Pin Config, TX Pin Config
-const unsigned long UARTPins[][4] = {
+const uint32_t UARTPins[][4] = {
         {PA0, PA1, GPIO_PA0_U0RX, GPIO_PA1_U0TX},
         {PB0, PB1, GPIO_PB0_U1RX, GPIO_PB1_U1TX},
         {PD6, PD7, GPIO_PD6_U2RX, GPIO_PD7_U2TX},

@@ -20,6 +20,10 @@
 #ifndef STELLARINO_H
 #define STELLARINO_H
 
+#include "stdlib.h"
+#include "stdint.h"
+#include "math.h"
+
 #define PART_LM4F120H5QR
 #define TARGET_IS_BLIZZARD_RA1
 #include "inc/lm4f120h5qr.h"
@@ -54,6 +58,9 @@
 #define LOW 0
 
 #define PWMFREQ 500	// PWM Frequency in Hz, when using analogWrite
+
+// Linearly maps i from range (imin, imax) to range (omin, omax)
+#define map(i, imin, imax, omin, omax) ( (((i)-(imin))/((imax)-(imin)))*((omax)-(omin)) + (omin) )
 
 void init(void);	// Must be called in main(), enables everything
 

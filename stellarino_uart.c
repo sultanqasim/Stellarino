@@ -28,7 +28,7 @@ static unsigned long power(unsigned long base, int exp) {
     return res;
 }
 
-void enableUART(unsigned char UART, unsigned long baudRate) {
+void enableUART(uint8_t UART, unsigned long baudRate) {
 	// We must unlock PD7 to use UART2
 	if (UART == 2) {
 		HWREG(GPIO_PORTD_LOCK_R) = GPIO_LOCK_KEY;
@@ -51,7 +51,7 @@ void puts(const char * str) {
     UARTputs(0, str);
 }
 
-void UARTputs(unsigned char UART, const char * str) {
+void UARTputs(uint8_t UART, const char * str) {
     int a = 0;
     while (str[a] != '\0') {
         if (str[a] == '\n') {
@@ -67,7 +67,7 @@ char * gets(char * str, int num) {
     return UARTgets(0, str, num);
 }
 
-char * UARTgets(unsigned char UART, char * str, int num) {
+char * UARTgets(uint8_t UART, char * str, int num) {
     int a = 0;
     while (a < num - 1) {
         str[a] = UARTpeekBlocking(UART);	// Waits for a character
@@ -87,7 +87,7 @@ void putc(char c) {
     ROM_UARTCharPut(UART0_BASE, c);
 }
 
-void UARTputc(unsigned char UART, char c) {
+void UARTputc(uint8_t UART, char c) {
     ROM_UARTCharPut(UARTBASE[UART], c);
 }
 
@@ -96,7 +96,7 @@ void putln(void) {
     ROM_UARTCharPut(UART0_BASE, '\n');
 }
 
-void UARTputln(unsigned char UART) {
+void UARTputln(uint8_t UART) {
     ROM_UARTCharPut(UARTBASE[UART], '\r');
     ROM_UARTCharPut(UARTBASE[UART], '\n');
 }
@@ -110,7 +110,7 @@ char getc(void) {
     return ROM_UARTCharGet(UART0_BASE);
 }
 
-char UARTgetc(unsigned char UART) {
+char UARTgetc(uint8_t UART) {
     if (peeked[UART]) {
         peeked[UART] = 0;
         return peekedChar[UART];
@@ -128,7 +128,7 @@ char peek(void) {
     return peekedChar[0] = ROM_UARTCharGet(UART0_BASE);
 }
 
-char UARTpeek(unsigned char UART) {
+char UARTpeek(uint8_t UART) {
     if (peeked[UART]) return peekedChar[UART];	// Already peeked a char
 
     if (!ROM_UARTCharsAvail(UARTBASE[UART])) return (char)-1;
@@ -140,15 +140,13 @@ char UARTpeek(unsigned char UART) {
 char peekBlocking(void) {
     if (peeked[0]) return peekedChar[0];	// Already peeked a char
 
-    while (!ROM_UARTCharsAvail(UART0_BASE));	// Wait for a char
     peeked[0] = 1;
     return peekedChar[0] = ROM_UARTCharGet(UART0_BASE);
 }
 
-char UARTpeekBlocking(unsigned char UART) {
+char UARTpeekBlocking(uint8_t UART) {
     if (peeked[UART]) return peekedChar[UART];	// Already peeked a char
 
-    while (!ROM_UARTCharsAvail(UARTBASE[UART]));	// Wait for a char
     peeked[UART] = 1;
     return peekedChar[UART] = ROM_UARTCharGet(UARTBASE[UART]);
 }
@@ -157,8 +155,9 @@ void puti(long i) {
     UARTputi(0, i);
 }
 
-void UARTputi(unsigned char UART, long i) {
-    unsigned char digs[12], reversed[12], a = 0, b, neg = 0;
+void UARTputi(uint8_t UART, long i) {
+    char digs[12], reversed[12];
+    uint8_t a = 0, b, neg = 0;
 
     if (i < 0) {
         neg = 1;
@@ -188,14 +187,15 @@ long geti() {
     return UARTgeti(0);
 }
 
-long UARTgeti(unsigned char UART) {
-    unsigned char digs[10], a, b, neg = 0;
+long UARTgeti(uint8_t UART) {
+    char digs[10];
+    uint8_t a, b, c, neg = 0;
 
     // Clear the leading non-number characters
-    UARTpeekBlocking(UART);	// Peeked char is now in peekedChar
-    while ((peekedChar[UART] < 48 || peekedChar[UART] > 57) && peekedChar[UART] != '-') {
+    c = UARTpeekBlocking(UART); // Peeked char is now in peekedChar
+    while ((c < 48 || c > 57) && c != '-') {
         peeked[UART] = 0;
-        UARTpeekBlocking(UART);
+        c = UARTpeekBlocking(UART);
     }
 
     // Read in digits
@@ -217,14 +217,15 @@ long UARTgeti(unsigned char UART) {
     return i;
 }
 
-void putu(unsigned long u, unsigned char digits) {
+void putu(unsigned long u, uint8_t digits) {
     UARTputu(0, u, digits);
 }
 
-void UARTputu(unsigned char UART, unsigned long u, unsigned char digits) {
+void UARTputu(uint8_t UART, unsigned long u, uint8_t digits) {
     if (digits > 10) digits = 10;
 
-    unsigned char digs[11], reversed[11], a = 0, b, c;
+    char digs[11], reversed[11];
+    uint8_t a = 0, b, c;
 
     do {
         b = u % 10;
@@ -246,20 +247,21 @@ void UARTputu(unsigned char UART, unsigned long u, unsigned char digits) {
     UARTputs(UART, (char *)reversed);
 }
 
-unsigned long getu(unsigned char digits) {
+unsigned long getu(uint8_t digits) {
     return UARTgetu(0, digits);
 }
 
-unsigned long UARTgetu(unsigned char UART, unsigned char digits) {
+unsigned long UARTgetu(uint8_t UART, uint8_t digits) {
+    char digs[10];
+    uint8_t a, b, c;
+
     if (digits > 10) digits = 10;
 
-    unsigned char digs[10], a, b;
-
     // Clear the leading non-number characters
-    UARTpeekBlocking(UART);	// Peeked char is now in peekedChar
-    while (peekedChar[UART] < 48 || peekedChar[UART] > 57) {
+    c = UARTpeekBlocking(UART); // Peeked char is now in peekedChar
+    while (c < 48 || c > 57) {
         peeked[UART] = 0;
-        UARTpeekBlocking(UART);
+        c = UARTpeekBlocking(UART);
     }
 
     // Read in digits
@@ -275,14 +277,15 @@ unsigned long UARTgetu(unsigned char UART, unsigned char digits) {
     return u;
 }
 
-void puth(unsigned long h, unsigned char digits) {
+void puth(unsigned long h, uint8_t digits) {
     UARTputh(0, h, digits);
 }
 
-void UARTputh(unsigned char UART, unsigned long h, unsigned char digits) {
+void UARTputh(uint8_t UART, unsigned long h, uint8_t digits) {
     if (digits > 8) digits = 8;
 
-    unsigned char digs[9], reversed[9], a = 0, b, c;
+    char digs[9], reversed[9];
+    uint8_t a = 0, b, c;
 
     do {
         b = h % 16;
@@ -306,21 +309,21 @@ void UARTputh(unsigned char UART, unsigned long h, unsigned char digits) {
     UARTputs(UART, (char *)reversed);
 }
 
-unsigned long geth(unsigned char digits) {
+unsigned long geth(uint8_t digits) {
     return UARTgeth(0, digits);
 }
 
-unsigned long UARTgeth(unsigned char UART, unsigned char digits) {
+unsigned long UARTgeth(uint8_t UART, uint8_t digits) {
     if (digits > 8) digits = 8;
 
-    unsigned char digs[8], a, b;
+    char digs[8];
+    uint8_t a, b, c;
 
     // Clear the leading non-number characters
-    UARTpeekBlocking(UART);	// Peeked char is now in peekedChar
-    while (! ((peekedChar[UART] > 47 && peekedChar[UART] < 58) ||
-            (peekedChar[UART] > 64 && peekedChar[UART] < 71)) ) {
+    c = UARTpeekBlocking(UART);
+    while ( !((c > 47 && c < 58) || (c > 64 && c < 71)) ) {
         peeked[UART] = 0;
-        UARTpeekBlocking(UART);
+        c = UARTpeekBlocking(UART);
     }
 
     // Read in digits
@@ -340,7 +343,77 @@ unsigned long UARTgeth(unsigned char UART, unsigned char digits) {
     return h;
 }
 
-/* Coming soon
-void putf(float f, unsigned char digits);
-float getf(unsigned char digits);
-*/
+void putf(float f, uint8_t decimal) {
+    UARTputf(0, f, decimal);
+}
+
+
+void UARTputf(uint8_t UART, float f, uint8_t decimal) {
+    char digs[12], reversed[12];
+    uint8_t a = 0, b, neg = 0;
+
+    if (f < 0) {
+        neg = 1;
+        f = -f;
+    }
+
+    if (decimal) {
+        f *= power(10, decimal);
+
+        for (a = 0; a < decimal; a++) {
+            b = (uint8_t)fmod(f, 10);
+            digs[a] = b + 48;   // Convert to digit ASCII
+            f /= 10;
+        }
+
+        digs[a] = '.';
+        a++;
+    }
+
+    do {
+        b = (uint8_t)fmod(f, 10);
+        digs[a] = b + 48;   // Convert to digit ASCII
+        f /= 10;
+        a++;
+    } while ((int)f);
+
+    // Reverse the digits into most significant to least significant
+    if (neg) {
+        reversed[0] = '-';
+        for (b = 1; b < a + neg; b++) reversed[b] = digs[a-b];
+        a += 1; // Extend the length of the string by 1 due to - sign
+    }
+    else for (b = 0; b < a; b++) reversed[b] = digs[a-b-1];
+
+    reversed[a] = '\0';
+    UARTputs(UART, (char *)reversed);
+}
+
+float getf() {
+    return UARTgetf(0);
+}
+
+float UARTgetf(uint8_t UART) {
+    char digs[12];
+    uint8_t a, c;
+
+    // Clear the leading non-number characters
+    c = UARTpeekBlocking(UART);
+    while (c < 45 || c > 57 || c == 47) {
+        peeked[UART] = 0;
+        c = UARTpeekBlocking(UART);
+    }
+
+    // Read in digits
+    for (a = 0; a < 12; a++) {
+        digs[a] = UARTgetc(UART);
+        if (digs[a] < 45 ||
+            digs[a] > 57 ||
+            digs[a] == 47)
+            break;
+    }
+    digs[a] = 0;
+
+    // Convert to float
+    return atof(digs);
+}

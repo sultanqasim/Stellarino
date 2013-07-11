@@ -64,15 +64,18 @@ void loop() {
 #include "stellarino.h"
 
 int main(void) {
+    float a, b;
+
     init();
     while(1) {
         puts("Enter numbers:\n");
-        long a = geti(), b = geti();
-        puti(a);
-        puts(" + ");
-        puti(b);
+        a = getf();
+        b = getf();
+        putf(a, 2);
+        puts(" + ");;
+        putf(b, 2);
         puts(" = ");
-        puti(a + b);
+        putf(a + b, 2);
         putln();
     }
 }
