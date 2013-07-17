@@ -75,7 +75,7 @@ extern const uint32_t UARTPins[8][4];
 #define PE1 33
 #define PE2 34
 #define PE3 35
-#define PE4 35
+#define PE4 36
 #define PE5 37
 #define PE6 38
 #define PE7 39

@@ -29,15 +29,18 @@ static unsigned long power(unsigned long base, int exp) {
 }
 
 void enableUART(uint8_t UART, unsigned long baudRate) {
-	// We must unlock PD7 to use UART2
-	if (UART == 2) {
-		HWREG(GPIO_PORTD_LOCK_R) = GPIO_LOCK_KEY;
-		HWREG(GPIO_PORTD_CR_R) = 0x80;
-	}
+    // We must unlock PD7 to use UART2
+    if (UART == 2) {
+        // GPIO Port D Lock Register is at 0x40007520
+        HWREG(0x40007520) = GPIO_LOCK_KEY;
+        // GPIO Port D Control Register is at 0x40007524
+        HWREG(0x40007524) = 0x80;
+    }
 
     ROM_SysCtlPeripheralEnable(SysCtlGPIOs[UARTPins[UART][0]/8]);
     ROM_SysCtlPeripheralSleepEnable(SysCtlGPIOs[UARTPins[UART][0]/8]);
     ROM_SysCtlPeripheralEnable(SysCtlUARTs[UART]);
+    ROM_SysCtlPeripheralSleepEnable(SysCtlUARTs[UART]);
     ROM_GPIOPinConfigure(UARTPins[UART][2]);
     ROM_GPIOPinConfigure(UARTPins[UART][3]);
     ROM_GPIOPinTypeUART(GPIO[UARTPins[UART][0]/8],
