@@ -135,12 +135,12 @@ char UARTpeekBlocking(uint8_t UART)
 }
 
 
-void puts(const char * str)
+void puts(const char *str)
 {
     UARTputs(0, str);
 }
 
-void UARTputs(uint8_t UART, const char * str)
+void UARTputs(uint8_t UART, const char *str)
 {
     int a = 0;
     while (str[a] != '\0')
@@ -155,12 +155,12 @@ void UARTputs(uint8_t UART, const char * str)
     }
 }
 
-char * gets(char * str, int num)
+char *gets(char *str, int num)
 {
     return UARTgets(0, str, num);
 }
 
-char * UARTgets(uint8_t UART, char * str, int num)
+char *UARTgets(uint8_t UART, char *str, int num)
 {
     int a = 0;
     while (a < num - 1)
@@ -181,7 +181,8 @@ char * UARTgets(uint8_t UART, char * str, int num)
 
 void putln(void)
 {
-    UARTputln(0);
+    UARTputc(0, '\r');
+    UARTputc(0, '\n');
 }
 
 void UARTputln(uint8_t UART)
