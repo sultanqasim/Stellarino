@@ -225,12 +225,11 @@ char UARTgetc(uint8_t UART);
     Returns a character read over UART. Waits for a character if one is not
     yet available. The character is erased from the buffer once read.
 
-char peek(void);
-char UARTpeek(uint8_t UART);
+int peek(void);
+int UARTpeek(uint8_t UART);
     Returns the next character from the buffer without clearing it.
     Successive calls to peek() and peekBlocking, and the next call to getc()
-    will return the same character. Returns a character with value -1 if
-    the buffer is empty.
+    will return the same character. Returns -255 if the buffer is empty.
 
 char peekBlocking(void);
 char UARTpeekBlocking(uint8_t UART);

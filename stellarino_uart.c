@@ -130,7 +130,7 @@ char UARTgetc(uint8_t UART) {
 int peek(void) {
     if (peeked[0]) return peekedChar[0];	// Already peeked a char
 
-    if (!ROM_UARTCharsAvail(UART0_BASE)) return -1;
+    if (!ROM_UARTCharsAvail(UART0_BASE)) return -255;
 
     peeked[0] = 1;
     return peekedChar[0] = ROM_UARTCharGet(UART0_BASE);
@@ -139,7 +139,7 @@ int peek(void) {
 int UARTpeek(uint8_t UART) {
     if (peeked[UART]) return peekedChar[UART];	// Already peeked a char
 
-    if (!ROM_UARTCharsAvail(UARTBASE[UART])) return -1;
+    if (!ROM_UARTCharsAvail(UARTBASE[UART])) return -255;
 
     peeked[UART] = 1;
     return peekedChar[UART] = ROM_UARTCharGet(UARTBASE[UART]);

@@ -82,4 +82,5 @@ Version History:
                         
 1.2     Oct 20, 2013    Switched to LGPL licence. Fixed bug in putf that could cause
                         stack overflow and infinite loop. Removed math.h dependency.
-                        Moved headers into separate include directory.
+                        Moved headers into separate include directory. Clarified the
+                        return value for UARTpeek.
