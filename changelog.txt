@@ -1,19 +1,19 @@
-/**********************STELLARINO CHANGELOG**********************/
+/**************************STELLARINO CHANGELOG**************************/
            Copyright (C) 2012-2013 Sultan Qasim Khan
 
-Stellarino is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
+Stellarino is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
 (at your option) any later version.
 
-Stellarino is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+Stellarino is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
+License for more details.
 
-You should have received a copy of the GNU General Public License
-along with Stellarino.  If not, see <http://www.gnu.org/licenses/>.
-/*****************************************************************/
+You should have received a copy of the GNU Lesser General Public License
+along with Stellarino. If not, see <http://www.gnu.org/licenses/>.
+/************************************************************************/
 
 Version History:
 0.1     Dec 14, 2012    Initial version. Basic init() function, delay() and
@@ -79,3 +79,7 @@ Version History:
                         lock code to unlock PD7 for use as UART2. Created new UART
                         functions for floating point input and output. Added map()
                         macro for linearly mapping a number from one range to another.
+                        
+1.2     Oct 20, 2013    Switched to LGPL licence. Fixed bug in putf that could cause
+                        stack overflow and infinite loop. Removed math.h dependency.
+                        Moved headers into separate include directory.

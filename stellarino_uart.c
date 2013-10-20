@@ -3,29 +3,34 @@
 
     This is part of Stellarino.
 
-    Stellarino is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
+    Stellarino is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation; either version 3 of the License, or
     (at your option) any later version.
 
-    Stellarino is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+    Stellarino is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
+    License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with Stellarino.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU Lesser General Public License
+    along with Stellarino. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <stdlib.h> // for atof
 #include "stellarino_uart.h"
 
-char peekedChar[8], peeked[8] = {0};
+static char peekedChar[8], peeked[8] = {0};
 
 static unsigned long power(unsigned long base, int exp) {
     int res = 1;
     int i;
     for (i = 0; i < exp; i++) res *= base;
     return res;
+}
+
+static inline float fmod_(float x, float y) {
+    return x - y*((long)(x/y));
 }
 
 void enableUART(uint8_t UART, unsigned long baudRate) {
@@ -364,7 +369,7 @@ void UARTputf(uint8_t UART, float f, uint8_t decimal) {
         f *= power(10, decimal);
 
         for (a = 0; a < decimal; a++) {
-            b = (uint8_t)fmod(f, 10);
+            b = (uint8_t)fmod_(f, 10);
             digs[a] = b + 48;   // Convert to digit ASCII
             f /= 10;
         }
@@ -374,11 +379,11 @@ void UARTputf(uint8_t UART, float f, uint8_t decimal) {
     }
 
     do {
-        b = (uint8_t)fmod(f, 10);
+        b = (uint8_t)fmod_(f, 10);
         digs[a] = b + 48;   // Convert to digit ASCII
         f /= 10;
         a++;
-    } while ((int)f);
+    } while ((int)f && a < 11);
 
     // Reverse the digits into most significant to least significant
     if (neg) {

@@ -1,21 +1,21 @@
-/**********************STELLARINO USER GUIDE**********************/
+/**************************STELLARINO USER GUIDE*************************/
            Copyright (C) 2012-2013 Sultan Qasim Khan
 
-Stellarino is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
+Stellarino is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
 (at your option) any later version.
 
-Stellarino is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+Stellarino is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
+License for more details.
 
-You should have received a copy of the GNU General Public License
-along with Stellarino.  If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU Lesser General Public License
+along with Stellarino. If not, see <http://www.gnu.org/licenses/>.
 
 
-/*************************ABOUT STELLARINO*************************/
+/***************************ABOUT STELLARINO***************************/
 Stellarino is a simple Wiring-like but incompatible interface library
 implemented in C for the TI Stellaris LM4F120H5QR used in the
 Stellaris Launchpad, and similar MCUs. It is meant to facilitate the
@@ -33,7 +33,7 @@ functionality using the StellarisWare PDL with simple, easy to understand
 code, it also makes a good introductory example for use of the PDL.
 
 
-/**********************HOW TO BUILD STELLARINO**********************/
+/************************HOW TO BUILD STELLARINO************************/
 In order to build Stellarino, you must first build the StrellarisWare
 Peripheral Driver Library for the Cortex M4F, contained within the CCS
 project driverlib-cm4f, and have that project inside your CCS workspace.
@@ -53,7 +53,7 @@ Once driverlib-cm4f has been built within one's CCS workspace, one may
 proceed to import and build Stellarino.
 
 
-/*************************PIN MULTIPLEXING*************************/
+/***************************PIN MULTIPLEXING***************************/
 Pin     Possible Use(s) in Stellarino
 PA0     GPIO, UART0 RX
 PA1     GPIO, UART0 TX
@@ -105,13 +105,13 @@ PF6     GPIO
 PF7     GPIO
 
 
-/************************GENERAL FUNCTIONS************************/
+/**************************GENERAL FUNCTIONS**************************/
 void init(void);
     This function must be called at the beginning of main() in any program
     to configure the microcontroller to function with Stellarino.
 
 
-/*********************INPUT AND OUTPUT FUNCTIONS********************/
+/**********************INPUT AND OUTPUT FUNCTIONS*********************/
 NOTE: 	FOR ALL IO FUNCTIONS, PIN SHOULD BE SPECIFIED IN THE FORM PX#.
         For example, Port A Pin 0 would be PA0. Pin names in this form
         have been predefined as macros in the library.
@@ -162,7 +162,7 @@ unsigned long pulseIn(unsigned char pin, short val, unsigned long timeout);
     timeout is the time to wait for a pulse to begin, in microseconds
 
 
-/*************************TIMING FUNCTIONS************************/
+/***************************TIMING FUNCTIONS**************************/
 void delay(unsigned long nTime);
     Pause for nTime milliseconds. Supports pauses up to 5 days in length.
 
@@ -182,7 +182,7 @@ unsigned long micros(void);
     milliseconds. This timer can only count for 71 minutes.
 
 
-/**************************UART FUNCTIONS*************************/
+/****************************UART FUNCTIONS***************************/
 Functions without the UART prefix use UART0, which is connected to the ICDI
 on the Launchpad. UART-prefixed functions can use any UART interface, from
 UART0 all the way to UART7. Just specify the appropriate UART number as an
@@ -283,7 +283,7 @@ float UARTgetf(uint8_t UART);
     does not accept numbers in scientific notation.
 
 
-/**************************SPI/SSI FUNCTIONS*************************/
+/***************************SPI/SSI FUNCTIONS*************************/
 void enableSPI(unsigned short SPINum, unsigned short wordLength, unsigned long dataRate);
     Enables the selected SPI, and configures it for a specified
     word length in bits at a data rate specified in Hz. The pins associated

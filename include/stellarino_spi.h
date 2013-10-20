@@ -1,4 +1,4 @@
-/*  stellarino_timer.c
+/*  stellarino_spi.h
     Copyright (C) 2012-2013 Sultan Qasim Khan
 
     This is part of Stellarino.
@@ -17,28 +17,13 @@
     along with Stellarino. If not, see <http://www.gnu.org/licenses/>.
 */
 
-void ResetISR(void);
-static void GenericISR(void);
+#ifndef STELLARINO_SPI_H
+#define STELLARINO_SPI_H
 
-// Linker variable for top of stack
-extern unsigned long __STACK_TOP;
+#include "stellarino.h"
 
-// Initial vector table
-#pragma DATA_SECTION(g_pfnVectors, ".intvecs")
-void (* const g_pfnVectors[])(void) =
-{
-    (void (*)(void))((unsigned long)&__STACK_TOP),	// Initial stack pointer
-    ResetISR,                               		// Reset handler
-    GenericISR										// Everything else handler
-};
+void enableSPI(unsigned short SPINum, unsigned short wordLength, unsigned long dataRate);
+void SPIWrite(unsigned short SPINum, unsigned long data);
+unsigned long SPIRead(unsigned short SPINum);
 
-// Initializes C and starts program
-void ResetISR(void) {
-    __asm("    .global _c_int00\n"
-          "    b.w     _c_int00");
-}
-
-// This interrupt handler does nothing
-static void GenericISR(void) {
-    while(1);
-}
+#endif
