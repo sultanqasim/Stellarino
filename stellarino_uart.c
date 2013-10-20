@@ -127,19 +127,19 @@ char UARTgetc(uint8_t UART) {
     return ROM_UARTCharGet(UARTBASE[UART]);
 }
 
-char peek(void) {
+int peek(void) {
     if (peeked[0]) return peekedChar[0];	// Already peeked a char
 
-    if (!ROM_UARTCharsAvail(UART0_BASE)) return (char)-1;
+    if (!ROM_UARTCharsAvail(UART0_BASE)) return -1;
 
     peeked[0] = 1;
     return peekedChar[0] = ROM_UARTCharGet(UART0_BASE);
 }
 
-char UARTpeek(uint8_t UART) {
+int UARTpeek(uint8_t UART) {
     if (peeked[UART]) return peekedChar[UART];	// Already peeked a char
 
-    if (!ROM_UARTCharsAvail(UARTBASE[UART])) return (char)-1;
+    if (!ROM_UARTCharsAvail(UARTBASE[UART])) return -1;
 
     peeked[UART] = 1;
     return peekedChar[UART] = ROM_UARTCharGet(UARTBASE[UART]);
