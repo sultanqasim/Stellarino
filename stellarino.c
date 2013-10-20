@@ -21,7 +21,8 @@
 
 static const long pwmPeriod = 80000000 / PWMFREQ;
 
-void init(void) {
+void init(void)
+{
     // Set system clock to 80 MHz
     ROM_SysCtlClockSet(SYSCTL_SYSDIV_2_5|SYSCTL_USE_PLL|SYSCTL_XTAL_16MHZ|SYSCTL_OSC_MAIN);
 
@@ -52,14 +53,16 @@ void init(void) {
     ROM_SysCtlPeripheralSleepEnable(SYSCTL_PERIPH_WTIMER5);
 }
 
-void pinMode(unsigned char pin, unsigned char mode) {
+void pinMode(unsigned char pin, unsigned char mode)
+{
     // Anti-brick JTAG Protection
     if (pin >= PC0 && pin <= PC3) return;
 
     ROM_SysCtlPeripheralEnable(SysCtlGPIOs[pin/8]);
     ROM_SysCtlPeripheralSleepEnable(SysCtlGPIOs[pin/8]);
 
-    switch (mode) {
+    switch (mode)
+    {
     case INPUT:
         ROM_GPIOPinTypeGPIOInput(GPIO[pin/8], bit8[pin%8]);
         ROM_GPIOPadConfigSet(GPIO[pin/8], bit8[pin%8], GPIO_STRENGTH_8MA, GPIO_PIN_TYPE_STD);
@@ -143,12 +146,14 @@ void pinMode(unsigned char pin, unsigned char mode) {
     }
 }
 
-int digitalRead(unsigned char pin) {
+int digitalRead(unsigned char pin)
+{
     if (ROM_GPIOPinRead(GPIO[pin/8], bit8[pin%8])) return 1;
     else return 0;
 }
 
-int analogRead(unsigned char pin) {
+int analogRead(unsigned char pin)
+{
     if (pinMux[pin][3] == 12) return 0;	// Non-ADC pin
 
     ROM_ADCSequenceConfigure(ADC0_BASE, 0, ADC_TRIGGER_PROCESSOR, 0);
@@ -163,12 +168,14 @@ int analogRead(unsigned char pin) {
     return value;	// From 0 to 4095
 }
 
-void digitalWrite(unsigned char pin, short val) {
+void digitalWrite(unsigned char pin, short val)
+{
     if (val) ROM_GPIOPinWrite(GPIO[pin/8], bit8[pin%8], bit8[pin%8]);
     else ROM_GPIOPinWrite(GPIO[pin/8], bit8[pin%8], 0);
 }
 
-void analogWrite(unsigned char pin, short val) {
+void analogWrite(unsigned char pin, short val)
+{
     long period;	// Period the output is low
 
     if (val > 255) period = 0;
@@ -180,7 +187,8 @@ void analogWrite(unsigned char pin, short val) {
     ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], period);
 }
 
-void servoWrite(unsigned char pin, short val) {
+void servoWrite(unsigned char pin, short val)
+{
     long period;
 
     if (val < 600) val = 600;
@@ -192,13 +200,15 @@ void servoWrite(unsigned char pin, short val) {
     ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], period);
 }
 
-unsigned long pulseIn(unsigned char pin, short val, unsigned long timeout) {
+unsigned long pulseIn(unsigned char pin, short val, unsigned long timeout)
+{
     // Max supported pulse length is 7 minutes
     ROM_TimerEnable(WTIMER5_BASE, TIMER_B);
 
     ROM_TimerLoadSet(WTIMER5_BASE, TIMER_B, timeout * 10);
     ROM_SysCtlDelay(5);	// Give time for timer to reload and count down once
-    while (digitalRead(pin) != val) {
+    while (digitalRead(pin) != val)
+    {
         // Timeout if reload has occurred
         if (ROM_TimerValueGet(WTIMER5_BASE, TIMER_B) == timeout * 10) return 0;
     }

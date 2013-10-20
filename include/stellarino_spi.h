@@ -22,6 +22,25 @@
 
 #include "stellarino.h"
 
+// Format: {SCK, SS, MISO, MOSI, SCK Config, SS Config, MISO Config, MOSI Config}
+static const unsigned long SPIPins[4][8] =
+{
+    {PA2, PA3, PA4, PA5, GPIO_PA2_SSI0CLK, GPIO_PA3_SSI0FSS, GPIO_PA4_SSI0RX, GPIO_PA5_SSI0TX},
+    {PF2, PF3, PF0, PF1, GPIO_PF2_SSI1CLK, GPIO_PF3_SSI1FSS, GPIO_PF0_SSI1RX, GPIO_PF1_SSI1TX},
+    {PB4, PB5, PB6, PB7, GPIO_PB4_SSI2CLK, GPIO_PB5_SSI2FSS, GPIO_PB6_SSI2RX, GPIO_PB7_SSI2TX},
+    {PD0, PD1, PD2, PD3, GPIO_PD0_SSI3CLK, GPIO_PD1_SSI3FSS, GPIO_PD2_SSI3RX, GPIO_PD3_SSI3TX}
+};
+
+static const unsigned long SysCtlSSI[4] =
+{
+    SYSCTL_PERIPH_SSI0, SYSCTL_PERIPH_SSI1, SYSCTL_PERIPH_SSI2, SYSCTL_PERIPH_SSI3
+};
+
+static const unsigned long SSIBase[4] =
+{
+    SSI0_BASE, SSI1_BASE, SSI2_BASE, SSI3_BASE
+};
+
 void enableSPI(unsigned short SPINum, unsigned short wordLength, unsigned long dataRate);
 void SPIWrite(unsigned short SPINum, unsigned long data);
 unsigned long SPIRead(unsigned short SPINum);

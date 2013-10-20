@@ -24,21 +24,25 @@ short r = 0, g = 85, b = 171, dr = 1, dg = 1, db = 1;
 void setup();
 void loop();
 
-int main(void) {
+int main(void)
+{
     init();
     setup();
-    while(1) loop();
+    while (1)
+        loop();
 }
 
 // 2-Speed LED Colour Fade Demo
-void setup() {
+void setup()
+{
     pinMode(RED_LED, OUTPUT_PWM);
     pinMode(GREEN_LED, OUTPUT_PWM);
     pinMode(BLUE_LED, OUTPUT_PWM);
     pinMode(SW1, INPUT_PULLUP);
 }
 
-void loop() {
+void loop()
+{
     analogWrite(RED_LED, r);
     analogWrite(GREEN_LED, g);
     analogWrite(BLUE_LED, b);
@@ -63,23 +67,26 @@ void loop() {
 // UART Adder Demo Code
 #include "stellarino.h"
 
-int main(void) {
+int main(void)
+{
     float a, b;
 
     init();
-    while(1) {
+    while (1)
+    {
         puts("Enter numbers:\n");
         a = getf();
         b = getf();
         putf(a, 2);
-        puts(" + ");;
+        puts(" + ");
+        ;
         putf(b, 2);
         puts(" = ");
         putf(a + b, 2);
         putln();
     }
 }
-*/
+ */
 
 /*
 // MCP4921 DAC Demo using SPI
@@ -89,12 +96,14 @@ int main(void) {
 
 void DACWrite(short val);
 
-int main(void) {
+int main(void)
+{
     init();
     pinMode(PD0, OUTPUT);
     enableSPI(0, 16, 16000000);
     short a = 0;
-    while (1) {
+    while (1)
+    {
         if (a > 4095) a = 0;
         DACWrite(a);
         a += 5;
@@ -102,7 +111,8 @@ int main(void) {
     }
 }
 
-void DACWrite(short val) {
+void DACWrite(short val)
+{
     if (val < 0) val = 0;
     else if (val > 4095) val = 4095;
     SPIWrite(0, val + bit16[12] + bit16[13]);
@@ -111,4 +121,4 @@ void DACWrite(short val) {
     digitalWrite(PD0, LOW);
     digitalWrite(PD0, HIGH);
 }
-*/
+ */

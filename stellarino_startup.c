@@ -33,12 +33,14 @@ void (* const g_pfnVectors[])(void) =
 };
 
 // Initializes C and starts program
-void ResetISR(void) {
+void ResetISR(void)
+{
     __asm("    .global _c_int00\n"
           "    b.w     _c_int00");
 }
 
 // This interrupt handler does nothing
-static void GenericISR(void) {
+static void GenericISR(void)
+{
     while(1);
 }
