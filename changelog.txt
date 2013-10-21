@@ -80,8 +80,7 @@ Version History:
                         functions for floating point input and output. Added map()
                         macro for linearly mapping a number from one range to another.
                         
-1.2     Oct 20, 2013    Switched to LGPL licence. Fixed bug in putf that could cause
-                        stack overflow and infinite loop. Removed math.h dependency.
-                        Moved headers into separate include directory. Clarified the
-                        return value for UARTpeek. Cleaned up header structure.
-                        Improved code formatting.
+1.2     Oct 20, 2013    Switched to LGPL licence. Added UART RX buffering. Fixed bug
+                        in putf that could cause stack overflow and infinite loop.
+                        Removed math.h dependency. Improved project structure and
+                        code formatting. Clarified the return value for UARTpeek.

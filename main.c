@@ -17,7 +17,7 @@
     along with Stellarino. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "stellarino.h"
+#include <stellarino.h>
 
 short r = 0, g = 85, b = 171, dr = 1, dg = 1, db = 1;
 
@@ -65,7 +65,7 @@ void loop()
 
 /*
 // UART Adder Demo Code
-#include "stellarino.h"
+#include <stellarino.h>
 
 int main(void)
 {
@@ -92,7 +92,7 @@ int main(void)
 // MCP4921 DAC Demo using SPI
 // Generates a sawtooth wave, with the DAC connected to SSI0 and the
 // LDAC pin on PD0. SPI communication at 16 MHz.
-#include "stellarino.h"
+#include <stellarino.h>
 
 void DACWrite(short val);
 

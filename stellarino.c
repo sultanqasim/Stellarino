@@ -17,7 +17,7 @@
     along with Stellarino. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "stellarino.h"
+#include <stellarino.h>
 
 static const long pwmPeriod = 80000000 / PWMFREQ;
 

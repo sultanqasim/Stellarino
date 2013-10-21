@@ -20,7 +20,7 @@
 #ifndef STELLARINO_TIMER_H
 #define STELLARINO_TIMER_H
 
-#include "stellarino.h"
+#include <stellarino.h>
 
 // Use WTIMER5 TIMER_A
 void delay(unsigned long nTime);

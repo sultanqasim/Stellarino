@@ -20,54 +20,61 @@
 #ifndef STELLARINO_UART_H
 #define STELLARINO_UART_H
 
-#include "stellarino.h"
+#include <stellarino.h>
+#include <stdbool.h>
 
 void enableUART(uint8_t UART, unsigned long baudRate);
 
-void puts(const char * str);	// Will not append newline automatically
+int16_t UARTgetBufferLevel(uint8_t UART);
+bool UARToverflow(uint8_t UART);
+void UARTflushReceiveBuffer(uint8_t UART);
+
+// Will not append newline automatically
+#define puts(s) UARTputs(0, (s))
 void UARTputs(uint8_t UART, const char * str);
 
-char * gets(char * str, int num);	// Reads until newline or num chars
-char * UARTgets(uint8_t UART, char * str, int num);
+// Reads until newline or num chars
+#define gets(s, n) UARTgets(0, (s), (n))
+char *UARTgets(uint8_t UART, char * str, int num);
 
-void putc(char c);
+#define putc(c) UARTputc(0, (c))
 void UARTputc(uint8_t UART, char c);
 
-void putln(void);
+#define putln() UARTputln(0)
 void UARTputln(uint8_t UART);
 
-char getc(void);
+#define getc() UARTgetc(0)
 char UARTgetc(uint8_t UART);
 
 // These return -255 if buffers are empty
-int peek(void);
+#define peek() UARTpeek(0)
 int UARTpeek(uint8_t UART);
 
-char peekBlocking(void);
+#define peekBlocking() UARTpeekBlocking(0)
 char UARTpeekBlocking(uint8_t UART);
 
-void puti(long i);
+#define puti(i) UARTputi(0, (i))
 void UARTputi(uint8_t UART, long i);
 
-long geti(void);
+#define geti() UARTgeti(0)
 long UARTgeti(uint8_t UART);
 
-void putu(unsigned long u, uint8_t digits);
+#define putu(u, d) UARTputu(0, (u), (d))
 void UARTputu(uint8_t UART, unsigned long u, uint8_t digits);
 
-unsigned long getu(uint8_t digits);
+#define getu(d) UARTgetu(0, (d))
 unsigned long UARTgetu(uint8_t UART, uint8_t digits);
 
-void puth(unsigned long h, uint8_t digits);
+#define puth(h, d) UARTputh(0, (h), (d))
 void UARTputh(uint8_t UART, unsigned long h, uint8_t digits);
 
-unsigned long geth(uint8_t digits);
+#define geth(d) UARTgeth(0, (d))
 unsigned long UARTgeth(uint8_t UART, uint8_t digits);
 
-void putf(float f, uint8_t decimal);
+#define putf(f, d) UARTputf(0, (f), (d))
 void UARTputf(uint8_t UART, float f, uint8_t decimal);
 
-float getf();
+#define getf() UARTgetf(0)
 float UARTgetf(uint8_t UART);
 
 #endif

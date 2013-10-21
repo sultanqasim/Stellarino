@@ -17,7 +17,7 @@
     along with Stellarino. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "stellarino_timer.h"
+#include <stellarino_timer.h>
 
 void delay(unsigned long nTime)
 {
@@ -26,6 +26,11 @@ void delay(unsigned long nTime)
     ROM_TimerIntEnable(WTIMER5_BASE, TIMER_TIMA_TIMEOUT);
     ROM_TimerEnable(WTIMER5_BASE, TIMER_A);
     ROM_SysCtlSleep();
+
+    // Make sure the timer finished, go back to sleep if it didn't
+    // (Another interrupt may have woken up the system)
+    while (ROM_TimerValueGet(WTIMER5_BASE, TIMER_A) != nTime * 10)
+        ROM_SysCtlSleep();
 
     ROM_TimerIntDisable(WTIMER5_BASE, TIMER_TIMA_TIMEOUT);
     ROM_TimerDisable(WTIMER5_BASE, TIMER_A);
@@ -39,7 +44,7 @@ void delayInterrupt(void)
 void delayMicroseconds(unsigned long nTime)
 {
     if (!nTime) return;
-    else if (nTime < 3) SysCtlDelay(12 * nTime);	// empirical
+    else if (nTime < 3) SysCtlDelay(12 * nTime);    // empirical
     else
     {
         // Compensates for latency

@@ -20,7 +20,7 @@
 #ifndef STELLARINO_SPI_H
 #define STELLARINO_SPI_H
 
-#include "stellarino.h"
+#include <stellarino.h>
 
 // Format: {SCK, SS, MISO, MOSI, SCK Config, SS Config, MISO Config, MOSI Config}
 static const unsigned long SPIPins[4][8] =

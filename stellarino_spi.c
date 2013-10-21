@@ -17,7 +17,7 @@
     along with Stellarino. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "stellarino_spi.h"
+#include <stellarino_spi.h>
 
 void enableSPI(unsigned short SPINum, unsigned short wordLength,
         unsigned long dataRate)
