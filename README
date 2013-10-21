@@ -197,6 +197,15 @@ void enableUART(uint8_t UART, unsigned long baudRate);
     Enables the given UART, and configures it to run at the given baud rate.
     Any arbitrary baud rate may be used, however for reliable communication,
     baud rates of 1200000 or below are recommended.
+    
+int16_t UARTgetBufferLevel(uint8_t UART);
+    Returns the number of bytes present in the UART receive buffer.
+
+bool UARToverflow(uint8_t UART);
+    Returns true if the UART receive buffer has overflowed.
+
+void UARTflushReceiveBuffer(uint8_t UART);
+    Flushes all data in the UART receive buffer and resets the overflow flag.
 
 void puts(const char * str);
 void UARTputs(uint8_t UART, const char * str);
