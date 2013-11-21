@@ -46,8 +46,9 @@ static inline void rxEnqueue(uint8_t UART, uint8_t c)
 // Assumes buffer is not empty
 static inline uint8_t rxDequeue(uint8_t UART)
 {
+    uint8_t c = rxBuff[UART][rxBufferTail[UART]];
     rxBufferTail[UART] = (rxBufferTail[UART] + 1) % UART_BUFFSIZE;
-    return rxBuff[UART][rxBufferTail[UART] - 1];
+    return c;
 }
 
 // Called when UART RX FIFO has data in it
