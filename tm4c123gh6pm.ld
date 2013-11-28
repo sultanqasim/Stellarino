@@ -1,6 +1,6 @@
 /*  TM4C.ld
     Portions Copyright (C) 2013 Sultan Qasim Khan
-    
+
     Based off eehusky's Stellaris GCC template found at
     https://github.com/eehusky/Stellaris-GCC
 

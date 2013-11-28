@@ -1,12 +1,12 @@
-# 	Makefile
-# 	Portions Copyright (C) 2013 Sultan Qasim Khan
+#   Makefile
+#   Portions Copyright (C) 2013 Sultan Qasim Khan
 #
-#	Based off Mauro Scomparin's Stellaris GCC template at
-#	https://github.com/scompo/stellaris-launchpad-template-gcc
+#   Based off Mauro Scomparin's Stellaris GCC template at
+#   https://github.com/scompo/stellaris-launchpad-template-gcc
 #
-#	This is part of Stellarino.
+#   This is part of Stellarino.
 #
-#	Stellarino is free software; you can redistribute it and/or modify it
+#   Stellarino is free software; you can redistribute it and/or modify it
 #   under the terms of the GNU Lesser General Public License as published by
 #   the Free Software Foundation; either version 3 of the License, or
 #   (at your option) any later version.
@@ -67,13 +67,13 @@ FPU=-mfpu=fpv4-sp-d16 -mfloat-abi=softfp
 TIVAWARE_PATH=~/tiva_tools/tivaware/
 
 # Program name definition for ARM GNU C compiler.
-CC      = ${PREFIX_ARM}-gcc
+CC = ${PREFIX_ARM}-gcc
 # Program name definition for ARM GNU Linker.
-LD      = ${PREFIX_ARM}-ld
+LD = ${PREFIX_ARM}-ld
 # Program name definition for ARM GNU Object copy.
-CP      = ${PREFIX_ARM}-objcopy
+CP = ${PREFIX_ARM}-objcopy
 # Program name definition for ARM GNU Object dump.
-OD      = ${PREFIX_ARM}-objdump
+OD = ${PREFIX_ARM}-objdump
 
 # Option arguments for C compiler.
 CFLAGS=-mthumb ${CPU} ${FPU} -O0 -ffunction-sections -fdata-sections -MD -std=c99 -Wall -pedantic -c -g
@@ -156,3 +156,4 @@ clean:
 # You can add sudo to the line to flash without a udev rule
 load: ${PROJECT_NAME}
 	${FLASHER} build/${PROJECT_NAME}.bin ${FLASHER_FLAGS}
+
