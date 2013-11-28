@@ -20,7 +20,7 @@
     along with Stellarino. If not, see <http://www.gnu.org/licenses/>.
 */
 
-_stack_size = 1K;
+_stack_size = 2K;
 
 MEMORY
 {
@@ -39,20 +39,25 @@ SECTIONS
         _etext = .;
     } > FLASH
 
-    .data : AT(ADDR(.text) + SIZEOF(.text))
+    .data : 
     {
         _data = .;
         *(vtable)
         *(.data*)
         _edata = .;
-    } > SRAM
+    } > SRAM AT>FLASH
 
-    .bss : AT(ADDR(.data) + SIZEOF(.data))
+    .bss :
     {
         _bss = .;
         *(.bss*)
         *(COMMON)
         _ebss = .;
+    } > SRAM
+    
+    .ARM.exidx :
+    {
+        *(.ARM.exidx* .gnu.linkonce.armexidx.*)
     } > SRAM
 
     _heap_bottom = .;

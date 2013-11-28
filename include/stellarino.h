@@ -72,6 +72,7 @@ int analogRead(unsigned char pin);
 void digitalWrite(unsigned char pin, short val);
 void analogWrite(unsigned char pin, short val);
 void servoWrite(unsigned char pin, short val);
+void pwmWrite(unsigned char pin, float frequency, float duty);
 unsigned long pulseIn(unsigned char pin, short val, unsigned long timeout);
 
 #endif

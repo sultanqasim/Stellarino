@@ -64,6 +64,60 @@ void loop()
 }
 
 /*
+#define PERMIT_STDIO
+#include <stdio.h>
+#include <stellarino.h>
+
+int main(void)
+{
+    init();
+    pinMode(PC6, OUTPUT_PWM);
+    pinMode(PC7, OUTPUT_PWM);
+
+    unsigned char realPin;
+    int pin;
+    float freq, duty;
+    char line[30];
+
+    while (1)
+    {
+        // Sample command: SET 0 100.0 0.95
+        // This will set PC6 to 100 Hz with a 95% duty cycle.
+        UARTgets(0, line, 30);
+        if (sscanf(line, "SET %i %f %f", &pin, &freq, &duty) < 3)
+        {
+            printf("Failed to parse command.\r\n");
+            continue;
+        }
+
+        if (pin < 0 || pin > 1)
+        {
+            printf("Invalid pin.\r\n");
+            continue;
+        }
+
+        printf("Setting pin ");
+
+        switch (pin)
+        {
+        case 0:
+            printf("PC6");
+            realPin = PC6;
+            break;
+        case 1:
+            printf("PC7");
+            realPin = PC7;
+            break;
+        }
+
+        printf(" to output %.2f Hz PWM with %.1f%% duty cycle.\r\n", freq, duty*100);
+
+        pwmWrite(realPin, freq, duty);
+    }
+}
+*/
+
+/*
 // UART Adder Demo Code
 #include <stellarino.h>
 
@@ -79,7 +133,6 @@ int main(void)
         b = getf();
         putf(a, 2);
         puts(" + ");
-        ;
         putf(b, 2);
         puts(" = ");
         putf(a + b, 2);

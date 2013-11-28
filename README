@@ -154,6 +154,14 @@ void servoWrite(unsigned char pin, short val);
     val is the pulse length in microseconds. val must be between 600 and
         2400 microseconds.
 
+void pwmWrite(unsigned char pin, float frequency, float duty);
+    Sets a pin to output PWM at the given frequency with the given duty
+    cycle. The pin must first be set up for PWM output through pinMode().
+    After using this function on a pin, you may not use analogWrite on the
+    same pin until pinMode is called to restore the pin configuration.
+    frequency is the PWM output frequency in Hz.
+    duty is the duty cycle. It must be a value between 0.0 and 1.0.
+
 unsigned long pulseIn(unsigned char pin, short val, unsigned long timeout);
     Waits for a pulse to begin on a GPIO input pin until timeout, and
     returns the length of the pulse in microseconds if a pulse is detected.

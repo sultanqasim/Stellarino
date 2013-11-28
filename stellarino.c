@@ -200,6 +200,37 @@ void servoWrite(unsigned char pin, short val)
     ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], period);
 }
 
+void pwmWrite(unsigned char pin, float frequency, float duty)
+{
+    // First set up the pin for the given frequency
+    int customPwmPeriod = 80000000 / frequency;
+
+    // The narrow timers may need to use a prescaler to get the desired PWM period
+    if (pinMux[pin][0] < 6)
+        ROM_TimerPrescaleSet(TIMER[pinMux[pin][0]], pinMux[pin][1], (customPwmPeriod & 0xFFFF0000) >> 16);
+    else ROM_TimerPrescaleSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 0);
+
+    // Timer will load this value on timeout
+    ROM_TimerLoadSet(TIMER[pinMux[pin][0]], pinMux[pin][1], customPwmPeriod);
+
+    // Initial duty cycle of 0
+    ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], customPwmPeriod - 1);
+    if (pinMux[pin][0] < 6)
+        ROM_TimerPrescaleMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1],
+                (customPwmPeriod & 0xFFFF0000) >> 16);
+    else ROM_TimerPrescaleMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], 0);
+
+    // Now set the period the output is low, based on the duty cycle
+    long period;
+    if (duty >= 1) period = 0;
+    else if (duty <= 0) period = customPwmPeriod - 1;
+    else period = customPwmPeriod * (1.0 - duty);
+
+    if (pinMux[pin][0] < 6)	// Narrow timers may need a prescaler
+        ROM_TimerPrescaleMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], (period & 0xFFFF0000) >> 16);
+    ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], period);
+}
+
 unsigned long pulseIn(unsigned char pin, short val, unsigned long timeout)
 {
     // Max supported pulse length is 7 minutes
