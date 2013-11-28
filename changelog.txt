@@ -85,10 +85,12 @@ Version History:
                         Removed math.h dependency. Improved project structure and
                         code formatting. Clarified the return value for UARTpeek.
 
-1.3     Nov 27, 2013    Added support for Tiva C Series Launchpad. Added support for
+1.3     Nov 28, 2013    Added support for Tiva C Series Launchpad. Added support for
                         development on Linux and Mac using GCC for ARM. Fixed
                         critical UART receive buffering bug (thanks to astro75).
                         Added new pwmWrite write function for arbitrary PWM output.
                         Added experimental support for using stdio.h functions such
                         as printf and and sscanf. Tested only with GCC. Some functions
-                        are presently broken, such as scanf.
+                        are presently broken, such as scanf. Switched to TivaWare
+                        from StellarisWare. Old Stellaris Launchpads should still
+                        work as they did before.

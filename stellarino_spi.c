@@ -48,7 +48,7 @@ void SPIWrite(unsigned short SPINum, unsigned long data)
 
 unsigned long SPIRead(unsigned short SPINum)
 {
-    unsigned long data;
+    uint32_t data;
     ROM_SSIDataGet(SSIBase[SPINum], &data);
     return data;
 }

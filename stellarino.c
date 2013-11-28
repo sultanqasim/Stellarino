@@ -162,7 +162,7 @@ int analogRead(unsigned char pin)
 
     ROM_ADCProcessorTrigger(ADC0_BASE, 0);
     while(!ROM_ADCIntStatus(ADC0_BASE, 0, false));
-    unsigned long value;
+    uint32_t value;
     ROM_ADCSequenceDataGet(ADC0_BASE, 0, &value);
 
     return value;	// From 0 to 4095

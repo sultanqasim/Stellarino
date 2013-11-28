@@ -34,9 +34,13 @@ code, it also makes a good introductory example for use of the PDL.
 
 
 /************************HOW TO BUILD STELLARINO************************/
-In order to build Stellarino, you must first build the StrellarisWare
+On Linux and Mac:
+See gcc_instructions.txt
+
+On Windows:
+In order to build Stellarino, you must first build the TivaWare Peripheral
 Peripheral Driver Library for the Cortex M4F, contained within the CCS
-project driverlib-cm4f, and have that project inside your CCS workspace.
+project driverlib, and have that project inside your CCS workspace.
 
 If you have not already done that, first do as follows:
 1. In CCS, go to Project->Import Existing CCS Eclipse Project
@@ -44,13 +48,14 @@ If you have not already done that, first do as follows:
 3. Browse to the root of your StellarisWare installation directory, select
    the folder called "driverlib", and hit OK. Two projects should be
    discovered in the box below.
-4. Tick the project "driverlib-cm4f" and make sure "Copy projects into
-   workspace" is selected. Hit finish.
-5. Open the driverlib-cm4f project and hit build. You should be building the
+4. Tick the project "driverlib" and make sure "Copy projects into workspace"
+   is selected. Hit finish.
+5. Open the driverlib project and hit build. You should be building the
    debug configuration.
 
-Once driverlib-cm4f has been built within one's CCS workspace, one may
-proceed to import and build Stellarino.
+Once driverlib has been built within one's CCS workspace, one may
+proceed to import and build Stellarino. To build a release version of
+Stellarino, you will need to build a release version of driverlib.
 
 
 /***************************PIN MULTIPLEXING***************************/

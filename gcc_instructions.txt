@@ -12,6 +12,7 @@ Add it to your PATH by adding a similar line to your .profile
 export PATH=$PATH:$HOME/tiva_tools/gcc-arm-none-eabi-4_7-2013q3/bin
 
 Building TivaWare
+mkdir ~/tiva_tools
 cd ~/tiva_tools
 mkdir tivaware
 unzip SW-EK-TM4C123GXL-1.0.exe -d tivaware
