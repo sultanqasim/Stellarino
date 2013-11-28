@@ -1,0 +1,35 @@
+Mac ARM Toolchain Dependencies
+sudo port install flex bison gmp mpfr ncurses libmpc autoconf texinfo
+
+Linux ARM Toolchain Dependencies
+apt-get install flex bison libgmp3-dev libmpfr-dev libncurses5-dev libmpc-dev \
+        autoconf texinfo build-essential
+
+Get your toolchain from here:
+https://launchpad.net/gcc-arm-embedded
+
+Add it to your PATH by adding a similar line to your .profile
+export PATH=$PATH:$HOME/tiva_tools/gcc-arm-none-eabi-4_7-2013q3/bin
+
+Building TivaWare
+cd ~/tiva_tools
+mkdir tivaware
+unzip SW-EK-TM4C123GXL-1.0.exe -d tivaware
+cd tivaware
+make
+
+Building lm4flash
+cd ~/tiva_tools
+git clone https://github.com/utzig/lm4tools.git
+cd lm4tools/lm4flash
+make
+mv lm4flash ~/tiva_tools/gcc-arm-none-eabi-4_7-2013q3/bin
+
+Setting up the udev rules on Linux (replace <username> with your username)
+echo 'ATTRS{idVendor}=="1cbe", ATTRS{idProduct}=="00fd", GROUP="users", MODE="0660"' | \
+        sudo tee /etc/udev/rules.d/99-stellaris-launchpad.rules
+sudo usermod -aG users <username>
+
+Testing by flashing the blink code:
+cd ~/tiva_tools/tivaware/examples/boards/ek-tm4c123gxl/blinky/gcc
+lm4flash blinky.bin

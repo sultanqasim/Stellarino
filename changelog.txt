@@ -1,5 +1,5 @@
 /**************************STELLARINO CHANGELOG**************************/
-           Copyright (C) 2012-2013 Sultan Qasim Khan
+               Copyright (C) 2012-2013 Sultan Qasim Khan
 
 Stellarino is free software; you can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License as published by
@@ -84,3 +84,7 @@ Version History:
                         in putf that could cause stack overflow and infinite loop.
                         Removed math.h dependency. Improved project structure and
                         code formatting. Clarified the return value for UARTpeek.
+
+1.3     Nov 27, 2013    Added support for Tiva C Series Launchpad. Added support for
+                        development on Linux and Mac using GCC for ARM. Fixed
+                        critical UART receive buffering bug (thanks to astro75).

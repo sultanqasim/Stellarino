@@ -38,7 +38,7 @@ void enableSPI(unsigned short SPINum, unsigned short wordLength,
     ROM_SSIConfigSetExpClk(SSIBase[SPINum], SysCtlClockGet(), 0,
             SSI_MODE_MASTER, dataRate, wordLength);
 
-    SSIEnable(SSI_BASE);
+    SSIEnable(SSIBase[SPINum]);
 }
 
 void SPIWrite(unsigned short SPINum, unsigned long data)

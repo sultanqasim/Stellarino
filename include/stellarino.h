@@ -21,10 +21,14 @@
 #define STELLARINO_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
-#define PART_LM4F120H5QR
+#ifndef PART_TM4C123GH6PM
+#define PART_TM4C123GH6PM
 #define TARGET_IS_BLIZZARD_RA1
-#include "inc/lm4f120h5qr.h"
+#endif
+
+#include "inc/tm4c123gh6pm.h"
 #include "inc/hw_types.h"
 #include "inc/hw_memmap.h"
 #include "driverlib/rom.h"

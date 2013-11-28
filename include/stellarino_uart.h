@@ -21,7 +21,6 @@
 #define STELLARINO_UART_H
 
 #include <stellarino.h>
-#include <stdbool.h>
 
 void enableUART(uint8_t UART, unsigned long baudRate);
 

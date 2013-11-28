@@ -1,4 +1,4 @@
-/*  stellarino_timer.c
+/*  stellarino_startup.c
     Copyright (C) 2012-2013 Sultan Qasim Khan
 
     This is part of Stellarino.
@@ -16,6 +16,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with Stellarino. If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef __GNUC__
 
 void ResetISR(void);
 static void GenericISR(void);
@@ -44,3 +46,5 @@ static void GenericISR(void)
 {
     while(1);
 }
+
+#endif
