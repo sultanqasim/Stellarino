@@ -50,11 +50,13 @@
 
 #define INPUT 0
 #define OUTPUT 1
-#define INPUT_PULLUP 2
-#define INPUT_PULLDOWN 3
-#define INPUT_ANALOG 4
-#define OUTPUT_PWM 5
-#define OUTPUT_SERVO 6
+#define OUTPUT_OD 2
+#define INPUT_PULLUP 3
+#define INPUT_PULLDOWN 4
+#define INPUT_ANALOG 5
+#define OUTPUT_PWM 6
+#define OUTPUT_PWM_OD 7
+#define OUTPUT_SERVO 8
 
 #define HIGH 1
 #define LOW 0

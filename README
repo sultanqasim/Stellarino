@@ -126,10 +126,12 @@ void pinMode(unsigned char pin, unsigned char mode);
     mode should be one of the following (self-explanatory) macros:
         INPUT
         OUTPUT
+        OUTPUT_OD       // Open drain GPIO
         INPUT_PULLUP
         INPUT_PULLDOWN
         INPUT_ANALOG
         OUTPUT_PWM      // 500 Hz PWM, customizable via stellarino.h
+        OUTPUT_PWM_OD   // Open drain PWM
         OUTPUT_SERVO    // Standard servo pulses every 20 ms
 
 int digitalRead(unsigned char pin);

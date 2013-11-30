@@ -108,7 +108,7 @@ void enableUART(uint8_t UART, unsigned long baudRate)
             bit8[UARTPins[UART][0] % 8] | bit8[UARTPins[UART][1] % 8]);
 
     // Configure the UART
-    ROM_UARTConfigSetExpClk(UARTBASE[UART], ROM_SysCtlClockGet (), baudRate,
+    ROM_UARTConfigSetExpClk(UARTBASE[UART], ROM_SysCtlClockGet(), baudRate,
             (UART_CONFIG_WLEN_8 | UART_CONFIG_STOP_ONE | UART_CONFIG_PAR_NONE));
     ROM_UARTFIFOEnable(UARTBASE[UART]);
 
