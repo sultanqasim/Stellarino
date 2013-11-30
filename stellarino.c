@@ -37,8 +37,8 @@ void init(void)
     // Configure WTIMER4 for Timer functions
     ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_WTIMER4);
     ROM_TimerConfigure(WTIMER4_BASE, (TIMER_CFG_SPLIT_PAIR | TIMER_CFG_A_ONE_SHOT | TIMER_CFG_B_ONE_SHOT));
-    ROM_TimerPrescaleSet(WTIMER4_BASE, TIMER_A, 39999);			// 0.5 ms per cycle
-    ROM_TimerPrescaleSet(WTIMER4_BASE, TIMER_B, 79);			// 1 us per cycle
+    ROM_TimerPrescaleSet(WTIMER4_BASE, TIMER_A, 39999);         // 0.5 ms per cycle
+    ROM_TimerPrescaleSet(WTIMER4_BASE, TIMER_B, 79);            // 1 us per cycle
     ROM_SysCtlPeripheralSleepEnable(SYSCTL_PERIPH_WTIMER4);
     ROM_TimerEnable(WTIMER4_BASE, TIMER_A);
     ROM_TimerEnable(WTIMER4_BASE, TIMER_B);
@@ -46,9 +46,9 @@ void init(void)
     // Configure WTIMER5 for delay() function
     ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_WTIMER5);
     ROM_TimerConfigure(WTIMER5_BASE, (TIMER_CFG_SPLIT_PAIR | TIMER_CFG_A_ONE_SHOT | TIMER_CFG_B_ONE_SHOT));
-    ROM_TimerPrescaleSet(WTIMER5_BASE, TIMER_A, 7999);			// 0.1 ms per cycle
-    ROM_TimerPrescaleSet(WTIMER5_BASE, TIMER_B, 7);				// 0.1 us per cycle
-    TimerIntRegister(WTIMER5_BASE, TIMER_A, delayInterrupt);	// Attach interrupt to function
+    ROM_TimerPrescaleSet(WTIMER5_BASE, TIMER_A, 7999);          // 0.1 ms per cycle
+    ROM_TimerPrescaleSet(WTIMER5_BASE, TIMER_B, 7);             // 0.1 us per cycle
+    TimerIntRegister(WTIMER5_BASE, TIMER_A, delayInterrupt);    // Attach interrupt to function
     ROM_IntMasterEnable();	// Enable interrupts
     ROM_SysCtlPeripheralSleepEnable(SYSCTL_PERIPH_WTIMER5);
 }
@@ -234,7 +234,7 @@ void pwmWrite(unsigned char pin, float frequency, float duty)
     long period;
     if (duty >= 1) period = 0;
     else if (duty <= 0) period = customPwmPeriod - 1;
-    else period = customPwmPeriod * (1.0 - duty);
+    else period = customPwmPeriod * (1.0f - duty);
 
     if (pinMux[pin][0] < 6)	// Narrow timers may need a prescaler
         ROM_TimerPrescaleMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], (period & 0xFFFF0000) >> 16);

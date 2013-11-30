@@ -29,9 +29,9 @@ extern unsigned long __STACK_TOP;
 #pragma DATA_SECTION(g_pfnVectors, ".intvecs")
 void (* const g_pfnVectors[])(void) =
 {
-    (void (*)(void))((unsigned long)&__STACK_TOP),	// Initial stack pointer
-    ResetISR,                               		// Reset handler
-    GenericISR										// Everything else handler
+    (void (*)(void))((unsigned long)&__STACK_TOP),  // Initial stack pointer
+    ResetISR,                                       // Reset handler
+    GenericISR                                      // Everything else handler
 };
 
 // Initializes C and starts program
