@@ -75,7 +75,8 @@ void pinMode(unsigned char pin, unsigned char mode)
         
     case OUTPUT_OD:
         ROM_GPIOPinTypeGPIOOutputOD(GPIO[pin/8], bit8[pin%8]);
-        ROM_GPIOPadConfigSet(GPIO[2], bit8[6], GPIO_STRENGTH_8MA, GPIO_PIN_TYPE_OD);
+        ROM_GPIOPadConfigSet(GPIO[pin/8], bit8[pin%8], GPIO_STRENGTH_8MA, GPIO_PIN_TYPE_OD);
+        break;
 
     case INPUT_PULLUP:
         ROM_GPIOPinTypeGPIOInput(GPIO[pin/8], bit8[pin%8]);
@@ -97,14 +98,15 @@ void pinMode(unsigned char pin, unsigned char mode)
         if (pinMux[pin][0] == 12) break;
         ROM_SysCtlPeripheralEnable(SysCtlTimers[pinMux[pin][0]]);
         ROM_SysCtlPeripheralSleepEnable(SysCtlTimers[pinMux[pin][0]]);
-        
+
+        ROM_GPIOPinTypeTimer(GPIO[pin/8], bit8[pin%8]);
+        ROM_GPIOPinConfigure(pinMux[pin][2]);
+
         if (mode == OUTPUT_PWM_OD)
             ROM_GPIOPadConfigSet(GPIO[pin/8], bit8[pin%8], GPIO_STRENGTH_8MA, GPIO_PIN_TYPE_OD);
         else
             ROM_GPIOPadConfigSet(GPIO[pin/8], bit8[pin%8], GPIO_STRENGTH_8MA, GPIO_PIN_TYPE_STD);
-        
-        ROM_GPIOPinTypeTimer(GPIO[pin/8], bit8[pin%8]);
-        ROM_GPIOPinConfigure(pinMux[pin][2]);
+
         ROM_TimerConfigure(TIMER[pinMux[pin][0]], (TIMER_CFG_SPLIT_PAIR | TIMER_CFG_A_PWM | TIMER_CFG_B_PWM));
 
         // The narrow timers may need to use a prescaler to get the desired PWM period
