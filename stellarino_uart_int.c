@@ -149,8 +149,17 @@ void UARTputc(uint8_t UART, char c)
 
 char UARTgetc(uint8_t UART)
 {
-    // Wait for data if the buffer is empty
-    while (!rxQSize(UART)) flushReadFIFO(UART);
+    if (!rxQSize(UART))
+    {
+        // Disable interrupt to avoid possible race condition
+        ROM_UARTIntDisable(UARTBASE[UART], UART_INT_RX);
+
+        // Wait for data if the buffer is empty
+        while (!rxQSize(UART)) flushReadFIFO(UART);
+
+        // Return to the previous state
+        ROM_UARTIntEnable(UARTBASE[UART], UART_INT_RX);
+    }
 
     return (char)rxDequeue(UART);
 }
@@ -160,9 +169,15 @@ int UARTpeek(uint8_t UART)
     // If there is data in the buffer return that
     if (rxQSize(UART)) return rxBuff[UART][rxBufferTail[UART]];
 
+    // Disable interrupt to avoid possible race condition
+    ROM_UARTIntDisable(UARTBASE[UART], UART_INT_RX);
+
     // Try flushing the hardware FIFO and see if we can get data from there
     flushReadFIFO(UART);
     if (rxQSize(UART)) return rxBuff[UART][rxBufferTail[UART]];
+
+    // Return to the previous state
+    ROM_UARTIntEnable(UARTBASE[UART], UART_INT_RX);
 
     // No data was found
     return -255;
@@ -173,8 +188,14 @@ char UARTpeekBlocking(uint8_t UART)
     // If there is data in the buffer return that
     if (rxQSize(UART)) return rxBuff[UART][rxBufferTail[UART]];
 
+    // Disable interrupt to avoid possible race condition
+    ROM_UARTIntDisable(UARTBASE[UART], UART_INT_RX);
+
     // Wait for data if the buffer is empty
     while (!rxQSize(UART)) flushReadFIFO(UART);
+
+    // Return to the previous state
+    ROM_UARTIntEnable(UARTBASE[UART], UART_INT_RX);
 
     // Return what was read without popping it from the queue
     return rxBuff[UART][rxBufferTail[UART]];
