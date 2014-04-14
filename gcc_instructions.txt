@@ -9,12 +9,14 @@ Get your toolchain from here:
 https://launchpad.net/gcc-arm-embedded
 
 Add it to your PATH by adding a similar line to your .profile
-export PATH=$PATH:$HOME/tiva_tools/gcc-arm-none-eabi-4_7-2013q3/bin
+export PATH=$PATH:$HOME/tiva_tools/gcc-arm-none-eabi-4_8-2014q1/bin
+
+Obtain the latest version of TivaWare from http://software-dl.ti.com/tiva-c/SW-TM4C/latest/index_FDS.html
 
 Building TivaWare
 cd ~/tiva_tools
 mkdir tivaware
-unzip SW-EK-TM4C123GXL-1.0.exe -d tivaware
+unzip SW-TM4C-2.1.0.12573.exe -d tivaware
 cd tivaware
 make
 
@@ -23,7 +25,7 @@ cd ~/tiva_tools
 git clone https://github.com/utzig/lm4tools.git
 cd lm4tools/lm4flash
 make
-mv lm4flash ~/tiva_tools/gcc-arm-none-eabi-4_7-2013q3/bin
+mv lm4flash ~/tiva_tools/gcc-arm-none-eabi-4_8-2014q1/bin
 
 Setting up the udev rules on Linux (replace <username> with your username)
 echo 'SUBSYSTEMS=="usb", ATTRS{idVendor}=="1cbe", ATTRS{idProduct}=="00fd", GROUP="plugdev"' | \
