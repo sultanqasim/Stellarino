@@ -22,8 +22,8 @@
 
 #include <stellarino.h>
 
-void enableSPI(unsigned short SPINum, unsigned short wordLength, unsigned long dataRate);
-void SPIWrite(unsigned short SPINum, unsigned long data);
-unsigned long SPIRead(unsigned short SPINum);
+void enableSPI(uint16_t SPINum, uint16_t wordLength, uint32_t dataRate);
+void SPIWrite(uint16_t SPINum, uint32_t data);
+uint32_t SPIRead(uint16_t SPINum);
 
 #endif

@@ -1,5 +1,5 @@
 /*  stellarino.c
-    Copyright (C) 2012-2013 Sultan Qasim Khan
+    Copyright (C) 2012-2014 Sultan Qasim Khan
 
     This is part of Stellarino.
 
@@ -53,7 +53,7 @@ void init(void)
     ROM_SysCtlPeripheralSleepEnable(SYSCTL_PERIPH_WTIMER5);
 }
 
-void pinMode(unsigned char pin, unsigned char mode)
+void pinMode(PinNumber pin, GPIOPinMode mode)
 {
     // Anti-brick JTAG Protection
     if (pin >= PC0 && pin <= PC3) return;
@@ -158,13 +158,13 @@ void pinMode(unsigned char pin, unsigned char mode)
     }
 }
 
-int digitalRead(unsigned char pin)
+int digitalRead(PinNumber pin)
 {
     if (ROM_GPIOPinRead(GPIO[pin/8], bit8[pin%8])) return 1;
     else return 0;
 }
 
-int analogRead(unsigned char pin)
+int analogRead(PinNumber pin)
 {
     if (pinMux[pin][3] == 12) return 0;	// Non-ADC pin
 
@@ -180,13 +180,13 @@ int analogRead(unsigned char pin)
     return value;	// From 0 to 4095
 }
 
-void digitalWrite(unsigned char pin, short val)
+void digitalWrite(PinNumber pin, short val)
 {
     if (val) ROM_GPIOPinWrite(GPIO[pin/8], bit8[pin%8], bit8[pin%8]);
     else ROM_GPIOPinWrite(GPIO[pin/8], bit8[pin%8], 0);
 }
 
-void analogWrite(unsigned char pin, short val)
+void analogWrite(PinNumber pin, short val)
 {
     long period;	// Period the output is low
 
@@ -199,7 +199,7 @@ void analogWrite(unsigned char pin, short val)
     ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], period);
 }
 
-void servoWrite(unsigned char pin, short val)
+void servoWrite(PinNumber pin, short val)
 {
     long period;
 
@@ -212,7 +212,7 @@ void servoWrite(unsigned char pin, short val)
     ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], period);
 }
 
-void pwmWrite(unsigned char pin, float frequency, float duty)
+void pwmWrite(PinNumber pin, float frequency, float duty)
 {
     // First set up the pin for the given frequency
     int customPwmPeriod = 80000000 / frequency;
@@ -243,7 +243,7 @@ void pwmWrite(unsigned char pin, float frequency, float duty)
     ROM_TimerMatchSet(TIMER[pinMux[pin][0]], pinMux[pin][1], period);
 }
 
-unsigned long pulseIn(unsigned char pin, short val, unsigned long timeout)
+unsigned long pulseIn(PinNumber pin, short val, unsigned long timeout)
 {
     // Max supported pulse length is 7 minutes
     ROM_TimerEnable(WTIMER5_BASE, TIMER_B);

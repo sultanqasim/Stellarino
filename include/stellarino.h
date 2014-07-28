@@ -1,5 +1,5 @@
 /*  stellarino.h
-    Copyright (C) 2012-2013 Sultan Qasim Khan
+    Copyright (C) 2012-2014 Sultan Qasim Khan
 
     This is part of Stellarino.
 
@@ -48,33 +48,36 @@
 #include <stellarino_uart.h>
 #include <stellarino_spi.h>
 
-#define INPUT 0
-#define OUTPUT 1
-#define OUTPUT_OD 2
-#define INPUT_PULLUP 3
-#define INPUT_PULLDOWN 4
-#define INPUT_ANALOG 5
-#define OUTPUT_PWM 6
-#define OUTPUT_PWM_OD 7
-#define OUTPUT_SERVO 8
+typedef enum GPIOPinMode
+{
+    INPUT,          // GPIO input, no pull
+    OUTPUT,         // GPIO push-pull output
+    OUTPUT_OD,      // GPIO open drain output
+    INPUT_PULLUP,   // GPIO input with pullup
+    INPUT_PULLDOWN, // GPIO input with pulldown
+    INPUT_ANALOG,   // Analog input (built in ADC)
+    OUTPUT_PWM,     // Timer driven push-pull PWM output
+    OUTPUT_PWM_OD,  // Timer driven open drain PWM output
+    OUTPUT_SERVO    // Timer driven PWM suitable for hobby servos
+} GPIOPinMode;
 
 #define HIGH 1
 #define LOW 0
 
-#define PWMFREQ 500	// PWM Frequency in Hz, when using analogWrite
+#define PWMFREQ 500 // PWM Frequency in Hz, when using analogWrite
 
 // Linearly maps i from range (imin, imax) to range (omin, omax)
 #define map(i, imin, imax, omin, omax) ( (((i)-(imin))/((imax)-(imin)))*((omax)-(omin)) + (omin) )
 
-void init(void);	// Must be called in main(), enables everything
+void init(void);    // Must be called in main(), enables everything
 
-void pinMode(unsigned char pin, unsigned char mode);
-int digitalRead(unsigned char pin);
-int analogRead(unsigned char pin);
-void digitalWrite(unsigned char pin, short val);
-void analogWrite(unsigned char pin, short val);
-void servoWrite(unsigned char pin, short val);
-void pwmWrite(unsigned char pin, float frequency, float duty);
-unsigned long pulseIn(unsigned char pin, short val, unsigned long timeout);
+void pinMode(PinNumber pin, GPIOPinMode mode);
+int digitalRead(PinNumber pin);
+int analogRead(PinNumber pin);
+void digitalWrite(PinNumber pin, short val);
+void analogWrite(PinNumber pin, short val);
+void servoWrite(PinNumber pin, short val);
+void pwmWrite(PinNumber pin, float frequency, float duty);
+unsigned long pulseIn(PinNumber pin, short val, unsigned long timeout);
 
 #endif

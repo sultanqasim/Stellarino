@@ -19,7 +19,7 @@
 
 #include <stellarino_timer.h>
 
-void delay(unsigned long nTime)
+void delay(uint32_t nTime)
 {
     ROM_TimerLoadSet(WTIMER5_BASE, TIMER_A, nTime * 10);
 
@@ -41,34 +41,34 @@ void delayInterrupt(void)
     ROM_TimerIntClear(WTIMER5_BASE, TIMER_TIMA_TIMEOUT);
 }
 
-void delayMicroseconds(unsigned long nTime)
+void delayMicroseconds(uint32_t nTime)
 {
     if (!nTime) return;
     else if (nTime < 3) SysCtlDelay(12 * nTime);    // empirical
     else
     {
         // Compensates for latency
-        unsigned long endtime = micros() + nTime - 1;
+        uint32_t endtime = micros() + nTime - 1;
         while (micros() < endtime);
     }
 }
 
 void resetMillis(void)
 {
-    ROM_TimerLoadSet(WTIMER4_BASE, TIMER_A, 4294967295);
+    ROM_TimerLoadSet(WTIMER4_BASE, TIMER_A, 0xFFFFFFFF);
 }
 
-unsigned long millis(void)
+uint32_t millis(void)
 {
-    return (4294967295 - ROM_TimerValueGet(WTIMER4_BASE, TIMER_A)) / 2;
+    return (0xFFFFFFFF - ROM_TimerValueGet(WTIMER4_BASE, TIMER_A)) / 2;
 }
 
 void resetMicros(void)
 {
-    ROM_TimerLoadSet(WTIMER4_BASE, TIMER_B, 4294967295);
+    ROM_TimerLoadSet(WTIMER4_BASE, TIMER_B, 0xFFFFFFFF);
 }
 
-unsigned long micros(void)
+uint32_t micros(void)
 {
-    return 4294967295 - ROM_TimerValueGet(WTIMER4_BASE, TIMER_B);
+    return 0xFFFFFFFF - ROM_TimerValueGet(WTIMER4_BASE, TIMER_B);
 }

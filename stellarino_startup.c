@@ -19,6 +19,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with Stellarino. If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include <stdint.h>
+
 #ifdef __GNUC__
 
 void ResetISR(void);
@@ -28,19 +31,19 @@ static void IntDefaultHandler(void);
 extern int main(void);
 
 // Symbols Created by the Linker
-extern unsigned long _etext;
-extern unsigned long _data;
-extern unsigned long _edata;
-extern unsigned long _bss;
-extern unsigned long _ebss;
-extern unsigned long _stack_bottom;
-extern unsigned long _stack_top;
-extern unsigned long _heap_bottom;
-extern unsigned long _heap_top;
+extern uint32_t _etext;
+extern uint32_t _data;
+extern uint32_t _edata;
+extern uint32_t _bss;
+extern uint32_t _ebss;
+extern uint32_t _stack_bottom;
+extern uint32_t _stack_top;
+extern uint32_t _heap_bottom;
+extern uint32_t _heap_top;
 
 __attribute__ ((section(".isr_vector")))void (* const g_pfnVectors[])(void) =
 {
-    (void (*)(void))((unsigned long) &_stack_top),
+    (void (*)(void))((uint32_t) &_stack_top),
     ResetISR,                               // The reset handler
     NmiSR,                                  // The NMI handler
     FaultISR,                               // The hard fault handler
@@ -199,7 +202,7 @@ __attribute__ ((section(".isr_vector")))void (* const g_pfnVectors[])(void) =
 
 void ResetISR(void)
 {
-    unsigned long *pulSrc, *pulDest;
+    uint32_t *pulSrc, *pulDest;
 
     //Copy the data segment initializers from flash to SRAM.
     pulSrc = &_etext;
@@ -242,13 +245,13 @@ void ResetISR(void);
 static void GenericISR(void);
 
 // Linker variable for top of stack
-extern unsigned long __STACK_TOP;
+extern uint32_t __STACK_TOP;
 
 // Initial vector table
 #pragma DATA_SECTION(g_pfnVectors, ".intvecs")
 void (* const g_pfnVectors[])(void) =
 {
-    (void (*)(void))((unsigned long)&__STACK_TOP),  // Initial stack pointer
+    (void (*)(void))((uint32_t)&__STACK_TOP),  // Initial stack pointer
     ResetISR,                                       // Reset handler
     GenericISR                                      // Everything else handler
 };

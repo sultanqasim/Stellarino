@@ -23,15 +23,15 @@
 #include <stellarino.h>
 
 // Use WTIMER5 TIMER_A
-void delay(unsigned long nTime);
+void delay(uint32_t nTime);
 void delayInterrupt(void);
 
-void delayMicroseconds(unsigned long nTime);
+void delayMicroseconds(uint32_t nTime);
 
 void resetMillis(void);
-unsigned long millis(void);
+uint32_t millis(void);
 
 void resetMicros(void);
-unsigned long micros(void);
+uint32_t micros(void);
 
 #endif

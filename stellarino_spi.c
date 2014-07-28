@@ -19,8 +19,8 @@
 
 #include <stellarino_spi.h>
 
-void enableSPI(unsigned short SPINum, unsigned short wordLength,
-        unsigned long dataRate)
+void enableSPI(uint16_t SPINum, uint16_t wordLength,
+        uint32_t dataRate)
 {
     ROM_SysCtlPeripheralEnable(SysCtlSSI[SPINum]);
     ROM_SysCtlPeripheralSleepEnable(SysCtlSSI[SPINum]);
@@ -41,12 +41,12 @@ void enableSPI(unsigned short SPINum, unsigned short wordLength,
     SSIEnable(SSIBase[SPINum]);
 }
 
-void SPIWrite(unsigned short SPINum, unsigned long data)
+void SPIWrite(uint16_t SPINum, uint32_t data)
 {
     ROM_SSIDataPut(SSIBase[SPINum], data);
 }
 
-unsigned long SPIRead(unsigned short SPINum)
+uint32_t SPIRead(uint16_t SPINum)
 {
     uint32_t data;
     ROM_SSIDataGet(SSIBase[SPINum], &data);

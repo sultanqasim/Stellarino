@@ -17,8 +17,8 @@ along with Stellarino. If not, see <http://www.gnu.org/licenses/>.
 
 /***************************ABOUT STELLARINO***************************/
 Stellarino is a simple Wiring-like but incompatible interface library
-implemented in C for the TI Stellaris LM4F120H5QR used in the
-Stellaris Launchpad, and similar MCUs. It is meant to facilitate the
+implemented in C for popular TI Stellaris and Tiva C series microntrollers,
+particularly those used in Launchpad boards. It is meant to facilitate the
 rapid creation of basic microcontroller firmware without the need to
 parse through thousands of pages in datasheets and other documentation.
 It uses syntax similar to Wiring to ease the introduction of newcomers
@@ -31,6 +31,13 @@ It thus requires StellarisWare and a suitable IDE, such as TI Code Composer
 Studio in order to function. Since Stellarino implements all basic
 functionality using the StellarisWare PDL with simple, easy to understand
 code, it also makes a good introductory example for use of the PDL.
+
+
+/***********************SUPPORTED MICROCONTROLLERS**********************/
+- TI Stellaris LM4F120H5QR (Stellaris Launchpad)
+- TI Tiva C Series TM4C123GH6PM (Tiva C Series Launchpad)
+- Support for the TM4C1294NCPDT used in the Tiva C Series Connected
+  Launchpad is coming soon
 
 
 /************************HOW TO BUILD STELLARINO************************/
