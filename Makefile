@@ -1,7 +1,7 @@
 #   Makefile
-#   Portions Copyright (C) 2013 Sultan Qasim Khan
+#   Copyright (C) 2013-2014 Sultan Qasim Khan
 #
-#   Based off Mauro Scomparin's Stellaris GCC template at
+#   Inspired by Mauro Scomparin's Stellaris GCC template at
 #   https://github.com/scompo/stellaris-launchpad-template-gcc
 #
 #   This is part of Stellarino.
@@ -19,69 +19,72 @@
 #   You should have received a copy of the GNU Lesser General Public License
 #   along with Stellarino. If not, see <http://www.gnu.org/licenses/>.
 
-# Copyright (c) 2012, Mauro Scomparin
-# All rights reserved.
-#
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions are met:
-#     * Redistributions of source code must retain the above copyright
-#       notice, this list of conditions and the following disclaimer.
-#     * Redistributions in binary form must reproduce the above copyright
-#       notice, this list of conditions and the following disclaimer in the
-#       documentation and/or other materials provided with the distribution.
-#     * Neither the name of Mauro Scomparin nor the
-#       names of its contributors may be used to endorse or promote products
-#       derived from this software without specific prior written permission.
-#
-# THIS SOFTWARE IS PROVIDED BY Mauro Scomparin ``AS IS'' AND ANY
-# EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-# DISCLAIMED. IN NO EVENT SHALL Mauro Scomparin BE LIABLE FOR ANY
-# DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#
-# File:			Makefile.
-# Author:		Mauro Scomparin <http://scompoprojects.worpress.com>.
-# Version:		1.0.0.
-# Description:	Sample makefile.
-
 #==============================================================================
-#           Cross compiling toolchain / tools specifications
+#                         Build tools
 #==============================================================================
 
-# Prefix for the arm-eabi-none toolchain.
-# I recommend the gcc-arm-embedded toolchain available here:
-# https://launchpad.net/gcc-arm-embedded
+# Prefix for the GNU ARM tools
+# Use this toolchain: https://launchpad.net/gcc-arm-embedded
 PREFIX_ARM = arm-none-eabi
 
-# Microcontroller properties.
-PART=TM4C123GH6PM
-CPU=-mcpu=cortex-m4
-FPU=-mfpu=fpv4-sp-d16 -mfloat-abi=softfp
-
 # TivaWare path
-TIVAWARE_PATH=~/tiva_tools/tivaware/
+TIVAWARE_PATH = ~/tiva_tools/tivaware/
 
-# Program name definition for ARM GNU C compiler.
+# GNU ARM tools
 CC = ${PREFIX_ARM}-gcc
-# Program name definition for ARM GNU Linker.
 LD = ${PREFIX_ARM}-ld
-# Program name definition for ARM GNU Object copy.
 CP = ${PREFIX_ARM}-objcopy
-# Program name definition for ARM GNU Object dump.
 OD = ${PREFIX_ARM}-objdump
 
+# Flashing tool (lm4flash from lm4tools)
+FLASHER = lm4flash
+FLASHER_FLAGS =
+
+#==============================================================================
+#                         Target requirements
+#==============================================================================
+
+ALLOWEDTARGETS = LM4F120 TM4C123 TM4C129
+
+ifeq ($(TARGET),)
+    TARGET = TM4C123
+else
+    ifneq ($(TARGET), $(findstring $(TARGET), $(ALLOWEDTARGETS)))
+        $(error 'TARGET $(TARGET) not in ALLOWEDTARGETS $(ALLOWEDTARGETS)')
+    endif
+endif
+
+ifeq ($(TARGET),LM4F120)
+    LINKER_FILE = tm4c123gh6pm.ld
+    CFLAGS = -D TARGET_LM4F120
+endif
+
+ifeq ($(TARGET),TM4C123)
+    LINKER_FILE = tm4c123gh6pm.ld
+    CFLAGS = -D TARGET_TM4C123
+endif
+
+ifeq ($(TARGET),TM4C129)
+    LINKER_FILE = tm4c1294ncpdt.ld
+    CFLAGS = -D TARGET_TM4C129
+endif
+
+#==============================================================================
+#                         Build arguments/flags
+#==============================================================================
+
 # Option arguments for C compiler.
-CFLAGS=-mthumb ${CPU} ${FPU} -O0 -ffunction-sections -fdata-sections -MD -std=c99 -Wall -pedantic -c -g
-# Library stuff passed as flags!
-CFLAGS+= -I ${TIVAWARE_PATH} -I ./include -DPART_$(PART) -c -DTARGET_IS_BLIZZARD_RA1
+MCU_FLAGS = -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp
+SECTION_FLAGS = -ffunction-sections -fdata-sections
+CFLAGS += ${MCU_FLAGS} ${SECTION_FLAGS} -O2 -MD -std=c99 -Wall -pedantic
+CFLAGS += -I ${TIVAWARE_PATH} -I ./include
+
+ifeq ($(DEBUG),1)
+    CFLAGS += -g
+endif
 
 # Flags for LD
-LFLAGS  = --gc-sections
+LFLAGS = --gc-sections -T $(LINKER_FILE)
 
 # Flags for objcopy
 CPFLAGS = -Obinary
@@ -89,30 +92,20 @@ CPFLAGS = -Obinary
 # flags for objectdump
 ODFLAGS = -S
 
-# I want to save the path to libgcc, libc.a and libm.a for linking.
-# I can get them from the gcc frontend, using some options.
-# See gcc documentation
-LIB_GCC_PATH=${shell ${CC} ${CFLAGS} -print-libgcc-file-name}
-LIBC_PATH=${shell ${CC} ${CFLAGS} -print-file-name=libc.a}
-LIBM_PATH=${shell ${CC} ${CFLAGS} -print-file-name=libm.a}
+# Paths to important static libraries that we must link with
+LIB_GCC_PATH = ${shell ${CC} ${CFLAGS} -print-libgcc-file-name}
+LIBC_PATH = ${shell ${CC} ${CFLAGS} -print-file-name=libc.a}
+LIBM_PATH = ${shell ${CC} ${CFLAGS} -print-file-name=libm.a}
+PDL_PATH = ${TIVAWARE_PATH}driverlib/gcc/libdriver.a
 
-# Uploader tool path.
-# Set a relative or absolute path to the upload tool program.
-# I used this project: https://github.com/utzig/lm4tools
-FLASHER=lm4flash
-# Flags for the uploader program.
-FLASHER_FLAGS=
+LIB_PATHS = ${LIB_GCC_PATH} ${LIBC_PATH} ${LIBM_PATH} ${PDL_PATH}
 
 #==============================================================================
 #                         Project properties
 #==============================================================================
 
-# Project name (W/O .c extension eg. "main")
+# Name for the output binary
 PROJECT_NAME = main
-# Startup file name (W/O .c extension eg. "LM4F_startup")
-STARTUP_FILE = stellarino_startup_gcc
-# Linker file name
-LINKER_FILE = tm4c123gh6pm.ld
 
 SRC = $(wildcard *.c)
 OBJS = $(patsubst %.c,build/%.o,$(SRC))
@@ -121,7 +114,6 @@ OBJS = $(patsubst %.c,build/%.o,$(SRC))
 #                      Rules to make the target
 #==============================================================================
 
-#make all rule
 all: $(OBJS) ${PROJECT_NAME}.axf ${PROJECT_NAME}
 
 dirs:
@@ -130,7 +122,7 @@ dirs:
 build/%.o: %.c dirs
 	@echo
 	@echo Compiling $<...
-	$(CC) -c $(CFLAGS) ${<} -o ${@}
+	$(CC) -c $(CFLAGS) $< -o $@
 
 ${PROJECT_NAME}.axf: $(OBJS)
 	@echo
@@ -138,17 +130,16 @@ ${PROJECT_NAME}.axf: $(OBJS)
 	$(MAKE) -C ${TIVAWARE_PATH}driverlib/
 	@echo
 	@echo Linking...
-	$(LD) -T $(LINKER_FILE) $(LFLAGS) -o build/${PROJECT_NAME}.axf $(OBJS) ${TIVAWARE_PATH}driverlib/gcc/libdriver.a $(LIBM_PATH) $(LIBC_PATH) $(LIB_GCC_PATH)
+	$(LD) $(LFLAGS) -o build/$@ $(OBJS) ${LIB_PATHS}
 
 ${PROJECT_NAME}: ${PROJECT_NAME}.axf
 	@echo
 	@echo Copying...
-	$(CP) $(CPFLAGS) build/${PROJECT_NAME}.axf build/${PROJECT_NAME}.bin
+	$(CP) $(CPFLAGS) build/$< build/$@.bin
 	@echo
 	@echo Creating list file...
-	$(OD) $(ODFLAGS) build/${PROJECT_NAME}.axf > build/${PROJECT_NAME}.lst
+	$(OD) $(ODFLAGS) build/$< > build/$@.lst
 
-# make clean rule
 clean:
 	rm -rf build
 
@@ -156,4 +147,3 @@ clean:
 # You can add sudo to the line to flash without a udev rule
 load: ${PROJECT_NAME}
 	${FLASHER} build/${PROJECT_NAME}.bin ${FLASHER_FLAGS}
-

@@ -94,3 +94,7 @@ Version History:
                         are presently broken, such as scanf. Switched to TivaWare
                         from StellarisWare. Old Stellaris Launchpads should still
                         work as they did before.
+
+1.4     Jul 28, 2014    Added preliminary support for TMC129x based Tiva C Series
+                        Connected Launchpad. Deprecated support for Code Composer
+                        Studio and TI compiler - use GCC with makefiles instead.

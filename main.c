@@ -1,5 +1,5 @@
 /*  Stellarino Demo Programs
-    Copyright (C) 2012-2013 Sultan Qasim Khan
+    Copyright (C) 2012-2014 Sultan Qasim Khan
 
     This is part of Stellarino.
 

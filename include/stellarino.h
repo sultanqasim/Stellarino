@@ -23,12 +23,57 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#ifndef PART_TM4C123GH6PM
-#define PART_TM4C123GH6PM
-#define TARGET_IS_BLIZZARD_RA1
+/*  A note about part numbers and target names:
+    BLIZZARD_RA1 is used in the Stellaris Launchpad.
+    BLIZZARD_RB0 is used in the Tiva C Series Launchpad
+    SNOWFLAKE_RA1 is used in the Tiva C Series Connected Launchpad.
+
+    Due to an issue in TivaWare, ROM_ functions for BLIZZARD_RB0 are not
+    defined. Thus, I need to use BLIZZARD_RB1 instead.
+
+    TARGET_TM4C123 is for the Tiva C Series Launchpad.
+    It supports part numbers TM4C123GH6PM and LM4F230H6PM.
+
+    TARGET_LM4F120 is for the Stellaris Launchpad.
+    It supports part numbers TM4C1233H6PM and LM4F120H5QR.
+
+    TARGET_TM4C129 is for the Tiva C Series Connected Launchpad
+    It supports part number TM4C1294NCPDT.
+
+    Other parts may work but are not supported.
+*/
+
+// Assume TM4C123x if no target is set explicitly
+#if !defined(TARGET_TM4C123) && !defined(TARGET_TM4C129) && !defined(TARGET_LM4F120)
+#define TARGET_TM4C123
 #endif
 
+#if defined(TARGET_TM4C123)
+
+#ifndef PART_TM4C123GH6PM
+#define PART_TM4C123GH6PM
+#define TARGET_IS_BLIZZARD_RB1
+#endif
 #include "inc/tm4c123gh6pm.h"
+
+#elif defined(TARGET_LM4F120)
+
+#ifndef PART_TM4C1233H6PM
+#define PART_TM4C1233H6PM
+#define TARGET_IS_BLIZZARD_RA1
+#endif
+#include "inc/tm4c1233h6pm.h"
+
+#elif defined(TARGET_TM4C129)
+
+#ifndef PART_TM4C1294NCPDT
+#define PART_TM4C1294NCPDT
+#define TARGET_IS_SNOWFLAKE_RA1
+#endif
+#include "inc/tm4c1294ncpdt.h"
+
+#endif
+
 #include "inc/hw_types.h"
 #include "inc/hw_memmap.h"
 #include "driverlib/rom.h"
