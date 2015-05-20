@@ -1,5 +1,5 @@
 /*  stellarino_syscalls.c
-    Copyright (C) 2013 Sultan Qasim Khan
+    Copyright (C) 2013-2015 Sultan Qasim Khan
 
     This module defines system functions necessary to use functions in
     stdio.h, stdlib.h, and many other parts of the C standard library.
@@ -34,21 +34,21 @@ typedef char * caddr_t;
 caddr_t _sbrk(int incr)
 {
     char *prev_heap_end;
-    
+
     // Executed the first time through to set the static heap_end pointer to the
     // bottom of the head
     if (heap_end == 0) heap_end = (caddr_t)&_heap_bottom;
-    
+
     // We need to keep track of the current heap end because we'll return it to
     // the caller
     prev_heap_end = heap_end;
-    
+
     // Don't allow allocating more memory than we have room for in our heap
     if (heap_end + incr > (caddr_t)&_heap_top) return (caddr_t)0;
-    
+
     // Shift up the heap end so that it won't get reallocated
     heap_end += incr;
-    
+
     // Return the allocated memory on the heap
     return (caddr_t) prev_heap_end;
 }
@@ -82,19 +82,19 @@ int _open(const char *name, int flags, int mode)
 int _read(int file, char *ptr, int len)
 {
     int i;
-    
+
     // For now just read from UART0
     for (i = 0; i < len; i++) ptr[i] = UARTgetc(0);
-    
+
     return i;
 }
 
 int _write(int file, char *ptr, unsigned int len)
 {
-    int i;
-    
+    unsigned int i;
+
     // For now just write to UART0
     for (i = 0; i < len; i++) UARTputc(0, ptr[i]);
-    
+
     return i;
 }
