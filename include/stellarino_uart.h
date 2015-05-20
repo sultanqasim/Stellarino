@@ -1,5 +1,5 @@
 /*  stellarino_uart.h
-    Copyright (C) 2012-2013 Sultan Qasim Khan
+    Copyright (C) 2012-2015 Sultan Qasim Khan
 
     This is part of Stellarino.
 
@@ -24,7 +24,7 @@
 
 void enableUART(uint8_t UART, unsigned long baudRate);
 
-int16_t UARTgetBufferLevel(uint8_t UART);
+int32_t UARTgetBufferLevel(uint8_t UART);
 bool UARToverflow(uint8_t UART);
 void UARTflushReceiveBuffer(uint8_t UART);
 

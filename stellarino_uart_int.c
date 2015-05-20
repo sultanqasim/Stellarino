@@ -1,5 +1,5 @@
 /*  stellarino_uart_int.c
-    Copyright (C) 2013 Sultan Qasim Khan
+    Copyright (C) 2013-2015 Sultan Qasim Khan
 
     This is part of Stellarino.
 
@@ -25,13 +25,13 @@
 static uint8_t rxBuff[8][UART_BUFFSIZE];
 
 // Current positions in the buffers
-static int16_t rxBufferHead[8] = {0};  // Where to write
-static int16_t rxBufferTail[8] = {0};  // Where to read
+static volatile int32_t rxBufferHead[8] = {0};  // Where to write
+static volatile int32_t rxBufferTail[8] = {0};  // Where to read
 
 // Flags to indicate rx buffer overflow (one bit per UART)
-static uint8_t overflow = 0;
+static volatile uint8_t rxOverflow = 0;
 
-static inline int16_t rxQSize(uint8_t UART)
+static inline int32_t rxQSize(uint8_t UART)
 {
     return (rxBufferHead[UART] - rxBufferTail[UART]) % UART_BUFFSIZE;
 }
@@ -54,20 +54,29 @@ static inline uint8_t rxDequeue(uint8_t UART)
 // Called when UART RX FIFO has data in it
 static void flushReadFIFO(uint8_t UART)
 {
+    // This is not reentrant, so disable its interrupt while running
+    ROM_UARTIntDisable(UARTBASE[UART], UART_INT_RX);
+
+    // Clear the interrupt flag
+    ROM_UARTIntClear(UARTBASE[UART], UART_INT_RX);
+
     // Read from the FIFO and place in the circular buffer in memory
     while (ROM_UARTCharsAvail(UARTBASE[UART]))
     {
         if (rxQSize(UART) < UART_BUFFSIZE - 1)
+        {
             rxEnqueue(UART, ROM_UARTCharGet(UARTBASE[UART]));
+        }
         else
-            ROM_UARTCharGet(UARTBASE[UART]);
+        {
+            // Any new data will be discarded till room is available in queue
+            rxOverflow |= bit8[UART];
+            break;
+        }
     }
 
-    // If the circular queue is full, set the overflow flag and return
-    if (rxQSize(UART) == UART_BUFFSIZE - 1) overflow |= bit8[UART];
-
-    // Clear the appropriate interrupt flag
-    ROM_UARTIntClear(UARTBASE[UART], UART_INT_RX);
+    // Re-enable the interrupt
+    ROM_UARTIntEnable(UARTBASE[UART], UART_INT_RX);
 }
 
 void rxInt0(void) {flushReadFIFO(0);}
@@ -79,9 +88,15 @@ void rxInt5(void) {flushReadFIFO(5);}
 void rxInt6(void) {flushReadFIFO(6);}
 void rxInt7(void) {flushReadFIFO(7);}
 
-void (*rxInterrupts[8])(void) =
+static void (*rxInterrupts[8])(void) =
 {
     rxInt0, rxInt1, rxInt2, rxInt3, rxInt4, rxInt5, rxInt6, rxInt7
+};
+
+static uint32_t UARTInts[8] =
+{
+    INT_UART0, INT_UART1, INT_UART2, INT_UART3,
+    INT_UART4, INT_UART5, INT_UART6, INT_UART7
 };
 
 void enableUART(uint8_t UART, unsigned long baudRate)
@@ -96,16 +111,16 @@ void enableUART(uint8_t UART, unsigned long baudRate)
     }
 
     // Enable the UART peripheral in SysCtl
-    ROM_SysCtlPeripheralEnable(SysCtlGPIOs[UARTPins[UART][0] / 8]);
-    ROM_SysCtlPeripheralSleepEnable(SysCtlGPIOs[UARTPins[UART][0] / 8]);
+    ROM_SysCtlPeripheralEnable(SysCtlGPIOs[UARTPins[UART][0] >> 3]);
+    ROM_SysCtlPeripheralSleepEnable(SysCtlGPIOs[UARTPins[UART][0] >> 3]);
     ROM_SysCtlPeripheralEnable(SysCtlUARTs[UART]);
     ROM_SysCtlPeripheralSleepEnable(SysCtlUARTs[UART]);
 
     // Configure the associated GPIO pins for UART
     ROM_GPIOPinConfigure(UARTPins[UART][2]);
     ROM_GPIOPinConfigure(UARTPins[UART][3]);
-    ROM_GPIOPinTypeUART(GPIO[UARTPins[UART][0] / 8],
-            bit8[UARTPins[UART][0] % 8] | bit8[UARTPins[UART][1] % 8]);
+    ROM_GPIOPinTypeUART(GPIO[UARTPins[UART][0] >> 3],
+            bit8[UARTPins[UART][0] & 0x7] | bit8[UARTPins[UART][1] & 0x7]);
 
     // Configure the UART
     ROM_UARTConfigSetExpClk(UARTBASE[UART], ROM_SysCtlClockGet(), baudRate,
@@ -113,15 +128,16 @@ void enableUART(uint8_t UART, unsigned long baudRate)
     ROM_UARTFIFOEnable(UARTBASE[UART]);
 
     // Configure the UART receive (rx) interrupt
+    ROM_IntEnable(UARTInts[UART]);
     ROM_UARTIntEnable(UARTBASE[UART], UART_INT_RX);
-    UARTFIFOLevelSet(UARTBASE[UART], UART_FIFO_TX4_8, UART_FIFO_RX4_8);
+    UARTFIFOLevelSet(UARTBASE[UART], UART_FIFO_TX2_8, UART_FIFO_RX6_8);
     UARTIntRegister(UARTBASE[UART], rxInterrupts[UART]);
 
     // Enable the UART
     ROM_UARTEnable(UARTBASE[UART]);
 }
 
-int16_t UARTgetBufferLevel(uint8_t UART)
+int32_t UARTgetBufferLevel(uint8_t UART)
 {
     flushReadFIFO(UART);
     return rxQSize(UART);
@@ -129,7 +145,7 @@ int16_t UARTgetBufferLevel(uint8_t UART)
 
 bool UARToverflow(uint8_t UART)
 {
-    if (overflow & bit8[UART]) return true;
+    if (rxOverflow & bit8[UART]) return true;
     return false;
 }
 
@@ -139,7 +155,7 @@ void UARTflushReceiveBuffer(uint8_t UART)
     rxBufferHead[UART] = rxBufferTail[UART] = 0;
     flushReadFIFO(UART);
     rxBufferHead[UART] = rxBufferTail[UART] = 0;
-    overflow &= ~(bit8[UART]);
+    rxOverflow &= ~(bit8[UART]);
 }
 
 void UARTputc(uint8_t UART, char c)
@@ -149,17 +165,8 @@ void UARTputc(uint8_t UART, char c)
 
 char UARTgetc(uint8_t UART)
 {
-    if (!rxQSize(UART))
-    {
-        // Disable interrupt to avoid possible race condition
-        ROM_UARTIntDisable(UARTBASE[UART], UART_INT_RX);
-
-        // Wait for data if the buffer is empty
-        while (!rxQSize(UART)) flushReadFIFO(UART);
-
-        // Return to the previous state
-        ROM_UARTIntEnable(UARTBASE[UART], UART_INT_RX);
-    }
+    // Wait for data if the buffer is empty
+    while (!rxQSize(UART)) flushReadFIFO(UART);
 
     return (char)rxDequeue(UART);
 }
@@ -169,15 +176,9 @@ int UARTpeek(uint8_t UART)
     // If there is data in the buffer return that
     if (rxQSize(UART)) return rxBuff[UART][rxBufferTail[UART]];
 
-    // Disable interrupt to avoid possible race condition
-    ROM_UARTIntDisable(UARTBASE[UART], UART_INT_RX);
-
     // Try flushing the hardware FIFO and see if we can get data from there
     flushReadFIFO(UART);
     if (rxQSize(UART)) return rxBuff[UART][rxBufferTail[UART]];
-
-    // Return to the previous state
-    ROM_UARTIntEnable(UARTBASE[UART], UART_INT_RX);
 
     // No data was found
     return -255;
@@ -188,14 +189,8 @@ char UARTpeekBlocking(uint8_t UART)
     // If there is data in the buffer return that
     if (rxQSize(UART)) return rxBuff[UART][rxBufferTail[UART]];
 
-    // Disable interrupt to avoid possible race condition
-    ROM_UARTIntDisable(UARTBASE[UART], UART_INT_RX);
-
     // Wait for data if the buffer is empty
     while (!rxQSize(UART)) flushReadFIFO(UART);
-
-    // Return to the previous state
-    ROM_UARTIntEnable(UARTBASE[UART], UART_INT_RX);
 
     // Return what was read without popping it from the queue
     return rxBuff[UART][rxBufferTail[UART]];

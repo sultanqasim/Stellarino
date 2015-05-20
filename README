@@ -1,5 +1,5 @@
 /**************************STELLARINO USER GUIDE*************************/
-                Copyright (C) 2012-2014 Sultan Qasim Khan
+                Copyright (C) 2012-2015 Sultan Qasim Khan
 
 Stellarino is free software; you can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License as published by
@@ -220,7 +220,7 @@ void enableUART(uint8_t UART, unsigned long baudRate);
     Any arbitrary baud rate may be used, however for reliable communication,
     baud rates of 1200000 or below are recommended.
     
-int16_t UARTgetBufferLevel(uint8_t UART);
+int32_t UARTgetBufferLevel(uint8_t UART);
     Returns the number of bytes present in the UART receive buffer.
 
 bool UARToverflow(uint8_t UART);
